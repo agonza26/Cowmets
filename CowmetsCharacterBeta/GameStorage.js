@@ -23,6 +23,7 @@ function GameStorage(levels){
 	this.maxGridCellX=20;
 	this.maxGridCellY=20;
 	this.maxnumcells=40;
+	//this.test = 0;
 	
 
 	
