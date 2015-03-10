@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+
+
+
+
+<head>
+   <title>Test Environment</title>
+   <meta charset="utf-8">
+   <script src="brine.js"></script>
+   <script src="Player.js"></script>
+   <script src="testFile.js"></script>
+   <script src="GameStorage.js"></script>
+   <script src="CurrencyManager.js"></script>
+   <script src="PowerUpManager.js"></script>
+   <script src="AmmoManager.js"></script>
+   <script src="AlienManager.js"></script>
+   <script src="rockManager.js"></script>
+   <script src="Level.js"></script>
+   <script src="mothership.js"></script>
+</head>
+
+
+
+
+
+
+
+<body onload="initGame('canvas');">
+   
+   
+<canvas id="canvas" width="900" height="900" >
+</canvas>
+   
+   
+   
+   <script>
+        use2D = true;
+        initGame("canvas");
+        
+		//cheap background for the moment
+		
+		
+		
+		
+		
+		var background = new Sprite();
+		background.x = 0;
+		background.y = 0;
+   		background.width = canvas.width;
+    	background.height = canvas.height;
+    	
+ 		background.image = Textures.load("http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png");
+		world.addChild(background);
+
+		var tempS = new GameStorage();
+
+
+		var tempMan = quadSingleton.getInstance();
+		var x = new Level(tempS);
+        x.initialize();
+      	
+      	
+      	world.update = function(d){
+			this.updateChildren(d);
+			tempMan.clear();
+			//not currently working for some reason?
+			tempMan.updateTree(x.aM.alienArr);
+			
+			
+			
+			
+			var items;
+			var currentAmmo;
+			var len;
+			var item;
+			var colliding = false;
+			
+			var tempArray = x.p.aMNGR.ammoArr;
+			
+			
+			///*
+			//iterate through items taht need to be checked
+			for(var i = 0; i < tempArray.length; i++){
+				currentAmmo = tempArray[i];//list containing items on screen
+				
+				items = tempMan.retrieve(currentAmmo); //gets list from area item is in
+				len = items.length;
+				
+				for(var j = 0; j < len; j++){
+					item = items[i];
+					
+					if(item===undefined){
+						
+						if(currentAmmo === undefined){
+							console.log("double damn");
+						}else{
+							console.log("damn");
+						}
+						continue;
+					}
+					if(currentAmmo == item) //if finds itself
+					{
+						continue;
+					}
+					
+					
+					
+					if(item.isColliding) //if both items are colliding already
+					{
+						continue;
+					}
+
+
+
+					//check to see if colliding
+					colliding = check2Ob(currentAmmo,item);
+					
+					//not needed just for me
+					if(colliding){
+						console.log("now colliding");
+					}
+					
+					
+					
+					//checks if they are not alreay colliding, sets it appropriately
+					if(!currentAmmo.isColliding){
+						//if(currentAmmo.health)
+						currentAmmo.isColliding=colliding;
+					}
+					
+					if(!item.isColliding){
+						item.isColliding=colliding;
+					}
+					
+				}
+				
+			}
+			//*/
+		};
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+
+        
+
+
+
+
+
+	</script>
+</body>
