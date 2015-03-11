@@ -34,12 +34,21 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
     this.isColliding = false;
     this.shooting = false;
     this.shootTime = 0;
+    this.truePause = false;
+    this.pause = false;
 }
 MadCow.prototype = new Sprite();
 
 
 
+
 MadCow.prototype.pauseP = function(){
+	this.truePause = !this.truePause;
+	this.pause = !this.pause;
+	this.aMNGR.pause = this.pause;
+};
+
+MadCow.prototype.pauseFalse = function(){
 	this.pause = !this.pause;
 	this.aMNGR.pause = this.pause;
 };
@@ -54,16 +63,16 @@ MadCow.prototype.setROF = function(){
 			this.shootRate= 30;
 			break;
 		case "laser":
-			this.shootRate = 90;
+			this.shootRate = 120;
 			break;
-		case "missle":
-			this.shootRate = 70;
+		case "missile":
+			this.shootRate = 50;
 			break;
 		case "grenade":
 			this.shootRate = 120;
 			break;
 		default:
-			this.shootRate = 30;
+			this.shootRate = 50;
 			break;
 	}
 };
@@ -77,19 +86,26 @@ MadCow.prototype.setROF = function(){
 
 
 MadCow.prototype.update = function(d){
+	
 	this.isColliding = false;
 	this.setROF();
-	
-	if(!this.pause){			
-		this.move();
-		this.shoot();
-
-
-		if(this.comet!=null){
+	if(this.comet!=null){
 		    
-			if(this.home == false){
+		if(this.home == false){
 			this.moveComet();
 			}
+	}
+	if(!this.pause){
+		var dontMove = false;
+		if(!this.home && this.comet!=null){
+			dontMove = true;
+		}	
+		if(!dontMove){	
+		   this.move();
+		   this.shoot();
+	    }
+
+		if(this.comet!=null){
 			if(gInput.x){
 				this.comet=null;
 			

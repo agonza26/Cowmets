@@ -76,16 +76,30 @@ Level.prototype.update = function(d){
     
     if(!this.p.pause){
     	
-    	if(this.lifeTime == 5){
-    		this.bM.generateM (canvas.width/2,100, 1, 1);
+    	if(this.lifeTime == 800){
+    		this.pM.createPowerup1();
     	}
+    	
+    	
+    	if(this.lifeTime == 300){
+    		this.pM.createPowerup2();
+    	}
+    	
+    	
+    	
+    	if(this.lifeTime == 1400){
+    		this.pM.createPowerup3();
+    	}
+    	
+    	
+    	
     	//proof of concept, at certain intervals, create an object, right now everything spawns really close in time for testing
     	//bullet collision isnt fully implemented
     	
     	
     	
     	
-    	if(this.lifeTime == 5){
+    	if(this.lifeTime %  500 ==0){
     		this.aM.createS(0, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
     		this.aM.createS(50, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
     		this.aM.createS(100, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
@@ -104,6 +118,14 @@ Level.prototype.update = function(d){
     		this.aM.createS(300, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
     		
     	
+    	
+    		this.aM.createS(0, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(50, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(100, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(150, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(200, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(250, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		this.aM.createS(300, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
     		
     		
     		//this.rM.generateSR(canvas.width/2-100,0, -10, 1, 1,false);
@@ -116,7 +138,12 @@ Level.prototype.update = function(d){
     	
     	
     	
+    	if(this.lifeTime ==200){
+    		this.rM.generateC(canvas.width+50,50, -60, 1, 1, 8,0.2,0.5,0.3);
+    	}
     	
+    	
+    	/*
     	
     	if(this.lifeTime == 1000){
     		this.aM.createS(0, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
@@ -174,11 +201,11 @@ Level.prototype.update = function(d){
     	
     	
     	
-    	//this.rM.setMax(20);
+    	this.rM.setMax(20);
     	
     	
-    	if(this.lifeTime==200){
-    	//	console.log(this.rM.switchAuto());
+    	if(this.lifeTime==600){
+    		console.log(this.rM.switchAuto());
     	}
     	
     	
@@ -186,12 +213,10 @@ Level.prototype.update = function(d){
     	
     	
     	
-    	if(this.lifeTime ==300){
-    		this.rM.generateC(canvas.width+50,50, -60, 1, 1, 8,0.2,0.5,0.3);
-    	}
+    	
     	
     	if(this.lifeTime ==700){
-    		//console.log(this.rM.switchAuto());
+    		console.log(this.rM.switchAuto());
     	}
     	
     	/*

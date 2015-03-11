@@ -204,7 +204,7 @@ mcAmmo.prototype.update = function(d){
 		
 		if(checkPOBn(this)){
 			this.deleteThis();
-			console.log("removed bullet");
+			//console.log("removed bullet");
 		}
 	}else{
 		this.deleteThis();
@@ -291,7 +291,8 @@ mcGrenade.prototype.update = function(d){
 };
 
 mcGrenade.prototype.deleteThis = function(){
-	this.manager.ammoArr.remove(this);
+	this.manager.ammoArr.splice(this.manager.ammoArr.indexOf(this),1);
+	//this.manager.ammoArr.remove(this);
 	world.removeChild(this);
 };
 
@@ -350,7 +351,8 @@ mcLaser.prototype.update = function(d){
 
 
 mcLaser.prototype.deleteThis = function(){
-	this.manager.ammoArr.remove(this);
+	this.manager.ammoArr.splice(this.manager.ammoArr.indexOf(this),1);
+	//this.manager.ammoArr.remove(this);
 	world.removeChild(this);
 };
 
@@ -407,6 +409,7 @@ mcMissile.prototype.update = function(d){
 };
 
 mcMissile.prototype.deleteThis = function(){
-	this.manager.ammoArr.remove(this);
+	this.manager.ammoArr.splice(this.manager.ammoArr.indexOf(this),1);
+	//this.manager.ammoArr.remove(this);
 	world.removeChild(this);
 };
