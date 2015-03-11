@@ -212,7 +212,7 @@ Level.prototype.update = function(d){
     	this.lifeTime++;
     	this.totalPoints = this.aM.alienPoints + this.rM.rockPoints; 
     	this.textPoints.text = this.totalPoints;
-    	console.log("Total overall points " + this.totalPoints);
+    	//console.log("Total overall points " + this.totalPoints);
     }else{
     	//draw pause menu
     }
