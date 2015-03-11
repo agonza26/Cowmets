@@ -242,7 +242,7 @@ spammer.prototype.update = function(d){
 		}else{
 			this.deleteThis();
 			this.givePoints(1);
-			console.log("dead just not dead");
+			
 		}
 	}
 
@@ -292,6 +292,18 @@ spammer.prototype.move = function(){
 			this.deleteThis();
 			this.givePoints(0.49);
 			this.player.h. setH (this.player.h.health-5);
+		}
+		
+		
+		for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
+			if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
+				this.deleteThis();
+				this.givePoints(1);
+				if(!(this.player.aMNGR.ammoArr[i] instanceof mcLaser )){
+					this.player.aMNGR.ammoArr[i].deleteThis();
+				}
+				break;
+			}
 		}
 
 };

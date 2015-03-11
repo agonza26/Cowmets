@@ -12,6 +12,11 @@ var gridSingleton = (function () {
       capacity: 0, 
       
       list: new List(),
+      
+      
+      
+      
+      
       grid: new CollisionGrid(0, 0, canvas.width, canvas.height, 10, 10),
       
       

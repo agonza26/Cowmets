@@ -147,6 +147,13 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 comet.prototype = new Sprite();
 
 comet.prototype.update = function(d){
+	
+	
+	if(this.onPlayer){
+		if(this.home == false){
+	    	this.moveTo();
+		}
+	}
 	if(!this.manager.pause){
 		if(gInput.x){
 			this.disengage();
@@ -158,6 +165,7 @@ comet.prototype.update = function(d){
 					this.onPlayer = true;
 					this.player.onComet = true;
 					this.player.comet=this;
+					//this.player.pauseFalse();
 				}
 			}
 			
@@ -172,9 +180,7 @@ comet.prototype.update = function(d){
 			}
 			
 			if(this.onPlayer){
-				if(this.home == false){
-				   this.moveTo();
-				}
+				
 				if(this.home == true){
 		            this.mine();
 					this.x = this.player.x - 17;
@@ -211,6 +217,7 @@ comet.prototype.moveTo = function(){
 	this.y -= yVel * Math.sin(this.goHome);
 	if(((this.x + 1 >= canvas.width/2) || (this.x - 1 <= canvas.width/2)) && (this.y + 1 >= (canvas.height - 100))){
 		this.home = true;
+		
 	}
 	
 };

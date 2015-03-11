@@ -37,7 +37,41 @@ PowerUpManager.prototype.createPowerup = function(){
 
 
 
-PowerUpManager.prototype.createPowerup = function(x,y,type,category,level,url){
+PowerUpManager.prototype.createPowerup1 = function(){
+	var pw = new powerUp(this.player.x,this.player.y-1000,"weapon","grenade",2,"http://www.colorhexa.com/ff0000.png",this.player);
+	
+
+};
+
+
+
+
+
+PowerUpManager.prototype.createPowerup2 = function(){
+
+	
+	
+	
+	var t1 = new powerUp(this.player.x+100,this.player.y-1000,"weapon","laser",1,"http://www.colorhexa.com/00ff00.png",this.player);
+
+	
+	
+	
+};
+
+
+
+PowerUpManager.prototype.createPowerup3 = function(){
+	var pw = new powerUp(this.player.x,this.player.y-1000,"weapon","missile",2,"http://www.colorhexa.com/ff0000.png",this.player);
+
+	
+	
+	
+};
+
+
+
+PowerUpManager.prototype.createPowerup4 = function(x,y,type,category,level,url){
 	var pw = new powerUp(this.player.x,this.player.y-1000,"weapon",category,level,"http://www.colorhexa.com/ff0000.png",this.player);
 
 	

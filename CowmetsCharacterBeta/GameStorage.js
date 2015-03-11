@@ -27,7 +27,7 @@ function GameStorage(levels){
 
 	
 	
-    this.pWepT = "ammo";
+    this.pWepT = "missile";
     this.pWepL = 2;
     this.pWepB = false;
     this.pWepU = null;

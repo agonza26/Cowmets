@@ -60,8 +60,10 @@
 		var x = new Level(tempS);
         x.initialize();
       	
-      	
+      	/*
       	world.update = function(d){
+      		world.removeChild(x.p);
+      		world.addChild(x.p);
 			this.updateChildren(d);
 			tempMan.clear();
 			//not currently working for some reason?
@@ -84,11 +86,19 @@
 			for(var i = 0; i < tempArray.length; i++){
 				currentAmmo = tempArray[i];//list containing items on screen
 				
-				items = tempMan.retrieve(currentAmmo); //gets list from area item is in
+				
+				
+				
+				/*
+				items =  tempMan.retrieve(currentAmmo); //gets list from area item is in
 				len = items.length;
 				console.log(len);
-				for(var j = 0; j < len; j++){
-					item = items.getAt(i);
+				*/
+				/*
+				console.log(tempMan.list.length);
+				console.log("test");
+				for(var j = 0; j < tempMan.list.length; j++){
+					item = tempMan.list.getAt(i);
 					
 					if(item===undefined){
 						
@@ -146,11 +156,11 @@
 				}
 				
 			}
-			//*/
+			
 		};
       	
       	
-      	
+      	*/
       	
       	
       	
