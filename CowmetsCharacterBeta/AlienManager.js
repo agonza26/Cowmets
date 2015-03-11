@@ -13,11 +13,13 @@ function alienManager(player,auto){
 	this.maxSize = 10;
 	this.alienArr = new Array();
 	world.addChild(this);
+	this.alienPoints = 0;
 }
 
 
 
 alienManager.prototype.update = function(d){
+	console.log("total Alien points " + this.alienPoints);
 	if(this.auto){
 		this.autoGenerate();
 	}
@@ -235,6 +237,7 @@ spammer.prototype.update = function(d){
 			this.lifeTime++;
 		}else{
 			this.deleteThis();
+			this.givePoints(1);
 			console.log("dead just not dead");
 		}
 	}
@@ -254,8 +257,16 @@ spammer.prototype.update = function(d){
 spammer.prototype.deleteThis = function(){
 	this.manager.alienArr.splice(this.manager.alienArr.indexOf(this),1);
 	world.removeChild(this);
+	//have it add this.points to the manager's points
+	//this.manager.alienPoints += this.points ; 
+	//this.givePoints();
 };
 
+//assume typically values between 0-2 (includes decimals, ie, 0.5, 1.25, 1)
+spammer.prototype.givePoints = function(mult){
+	
+	this.manager.alienPoints += this.points*mult ; 
+};
 
 
 
@@ -279,6 +290,7 @@ spammer.prototype.move = function(){
 		}
 		if(check2Ob(this,this.player)){
 			this.deleteThis();
+			this.givePoints(0.49);
 			this.player.h. setH (this.player.h.health-5);
 		}
 
