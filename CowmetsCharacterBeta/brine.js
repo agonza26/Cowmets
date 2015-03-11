@@ -2204,6 +2204,42 @@ CollisionGrid.prototype.insert = function(obj){
 	this.cells[index].push(obj);
 }
 
+CollisionGrid.prototype.search = function(obj){
+	var xdiff = obj.x-this.x;
+	var zdiff = obj.z-this.z;
+	var x = Math.max(0, Math.min(this.cols-1, Math.floor(xdiff/(this.width/this.cols))));
+	var z = Math.max(0, Math.min(this.rows-1, Math.floor(zdiff/(this.depth/this.rows))))*this.cols;
+	var index = Math.max(0, Math.min(this.size-1, x+z));
+	//println(index);
+	return this.cells[index];
+};
+
+
+
+
+
+
+CollisionGrid.prototype.getIndexes = function(obj){
+	var xdiff = obj.x-this.x;
+	var zdiff = obj.z-this.z;
+	var x = Math.max(0, Math.min(this.cols-1, Math.floor(xdiff/(this.width/this.cols))));
+	var z = Math.max(0, Math.min(this.rows-1, Math.floor(zdiff/(this.depth/this.rows))))*this.cols;
+	var index = Math.max(0, Math.min(this.size-1, x+z));
+	//println(index);
+	return index;
+};
+
+
+CollisionGrid.prototype.getIndex = function(ob){
+	var xdiff = obj.x-this.x;
+	var zdiff = obj.z-this.z;
+	var x = Math.max(0, Math.min(this.cols-1, Math.floor(xdiff/(this.width/this.cols))));
+	var z = Math.max(0, Math.min(this.rows-1, Math.floor(zdiff/(this.depth/this.rows))))*this.cols;
+	var index = Math.max(0, Math.min(this.size-1, x+z));
+	//println(index);
+	return index;
+};
+
 /**
  * Empties the cell list of all inserted objects.
  */

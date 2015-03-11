@@ -213,3 +213,155 @@ bAmmo.prototype.update = function(d){
 
 
 
+//krew boss//
+
+
+
+function krewManager(player){
+	this.player = player;
+}
+
+function krew(x,y,player,manager){
+	this.bool = true;
+	Sprite.call(this);
+	this.cIndex = 0;
+	this.x = x;
+	this.y = y; 
+	this.player = player;
+	this.manager = manager;
+	this.width = 400;
+	this.height = 150;
+	this.holograms = new List();
+	this.moveleft = true; 
+	this.moveright = false;
+	this.xoffset = -this.width/2;
+	this.yoffset = -this.height/2; 
+    this.image = Textures.load("http://www.clipartbest.com/cliparts/dcr/en6/dcren6poi.png"); 
+	world.addChild(this);
+	
+	
+};
+
+function hologram(x,y,index,s){
+	this.suicide = s;
+	this.cIndex = index;
+	Sprite.call(this);
+	this.x = x;
+	this.y = y; 
+	this.width = 400;
+	this.height = 150;
+	this.moveleft = true; 
+	this.moveright = false;
+	this.xoffset = -this.width/2;
+	this.yoffset = -this.height/2; 
+	this.image = Textures.load("http://people.ucsc.edu/~deurruti/dcren6poi.png"); 
+	world.addChild(this);
+}
+
+krew.prototype = new Sprite();
+hologram.prototype = new Sprite();
+krewManager.prototype = new Sprite();
+
+krewManager.prototype.generate = function(){
+	var space = new krew(450,80,this.player,this);
+};
+
+
+
+krew.prototype.move = function(){
+	if(this.x + this.width/2 >= canvas.width/2 && this.moveleft){
+	   this.x += 2;
+	   if(this.x + this.width/2 > canvas.width){
+	   	//console.log(this.x + this.width/2);
+	   	  this.moveleft = false; 
+	   }
+	   }else if ( this.x + this.width/2 > 0 && (!this.moveleft)){
+	   	this.x -= 2;
+	   	if(this.x - this.width/2 == 0 ){
+	   		this.moveleft = true ; 
+	   	}
+	   }else if (this.x + this.width/2 < canvas.width/2 && this.moveleft){
+	   	this.x += 2 ; 
+	   }
+	
+};
+
+krew.prototype.moveholograms = function(x,y){
+	for(var i = 0; i < this.holograms.length; ++i){
+		var h = this.holograms.getAt(i);
+		h.move(x,y);
+	}
+};
+
+hologram.prototype.move = function(x,y){
+	var followDist = 20;
+	var xB = 0;
+	var yB = 0;
+	var t = this.cIndex %4;
+	var pX = 0;
+	var pY = 0;
+	
+	if(!this.suicide){
+		switch (t){
+			case 0:
+				yB-=followDist;
+				pY+=this.height/2;
+				break;
+			case 1:
+				xB-=followDist;
+				pX+=this.width/2;
+				break;	
+			case 2:
+				yB+=followDist;
+				pY-=this.height/2;
+				break;
+			case 3:
+				xB+=followDist;
+				pX-=this.width/2;
+				break;	
+		}
+	}
+	
+  console.log("move down");
+  //console.log(x);
+  //console.log(y);
+  if( this.x+pX < x+xB ){
+  	this.x += 1;
+  }else if(this.x +pX > x+xB){ 
+  	this.x -= 1;
+  	}
+  if (this.y +pY< y+yB ){
+  	this.y += 1; 
+  }else if(this.y +pY > y+yB){
+  	this.y -= 1; 
+  }
+    
+    
+};
+
+krew.prototype.update = function(){
+	 if(this.holograms.length < 8){
+	 	
+	 	
+		this.holograms.push(new hologram(Math.random()*this.width+this.x-this.width/2,
+		 this.y + this.height/2,this.cIndex++,true));
+	
+	/*	 
+		 if(!this.bool){
+			this.cIndex++;
+		}
+		this.bool = !this.bool;
+		*/
+	}
+	//console.log(this.player.x);
+	//console.log(this.player.y);
+	
+	this.move();
+	this.moveholograms(this.player.x,this.player.y);
+};
+
+
+
+
+
+
