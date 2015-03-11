@@ -5,19 +5,28 @@ function Level(gameStorage){
     this.pM = new PowerUpManager(this.p);
     this.rM = new rockManager(this.p,false);
     this.bM = new bossManager(this.p);
-    
+    this.textPoints = new TextBox();
+    this.textPoints.x = 0;
+    this.textPoints.y = 10;
+    this.textPoints.width = 100;
+    this.textPoints.height = 30 ;
+    this.textPoints.drawBG = true;
+    this.textPoints.bgColor = "#ffff00";
+    this.textPoints.fontSize = 16;
     
 	this.lifeTime = 0;
 	this.hoardTimer = 100;
 	
 	this.pauseWait = 10;
 	this.pressedPause = false;
+	this.totalPoints = 0;
 	
 }
 
 
 Level.prototype.initialize = function(){
 	world.addChild(this);
+	world.addChild(this.textPoints);
 };
 
 
@@ -26,6 +35,7 @@ Level.prototype.initialize = function(){
 
 
 Level.prototype.update = function(d){
+	
 
 	if(!this.pressedPause){
 		
@@ -197,7 +207,9 @@ Level.prototype.update = function(d){
     	*/
     	//this.aM.updateMap();
     	this.lifeTime++;
-    	
+    	this.totalPoints = this.aM.alienPoints + this.rM.rockPoints; 
+    	this.textPoints.text = this.totalPoints;
+    	console.log("Total overall points " + this.totalPoints);
     }else{
     	//draw pause menu
     }

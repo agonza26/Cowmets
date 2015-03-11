@@ -14,12 +14,14 @@ function rockManager(player,auto){
 	this.rockImg = new Array();
 	this.rockImg.push(Textures.load("http://www.colorhexa.com/c0c0c0.png")); //smallAsteroid
 	world.addChild(this);
+	this.rockPoints = 0;
 }
 
 
 
 
 rockManager.prototype.update = function(d){
+	console.log("total Rock points " + this.rockPoints);
 	if(!this.pause){
 		if(this.auto){
 			this.autoGenerate();
