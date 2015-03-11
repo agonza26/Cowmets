@@ -121,19 +121,20 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 	this.speedMult = speedMult; //assume values 1<=speedMult; used to make them harder/easier for levels
 	this.angle =angle;
 	this.hO = new mineBar(mineRate,200,d,e,r);
+	this.goHome = 0;
+	this.home = false;
 	
 	
 	Sprite.call(this);
-    this.width = 50;  //we can make them bigger or smaller, the actual size will be debated once we work on art
-    this.height = 50;
+    this.width = 60;  //we can make them bigger or smaller, the actual size will be debated once we work on art
+    this.height = 60;
  	//this.image = Textures.load("http://www.colorhexa.com/c000c0.png" );
  	this.image = Textures.load("http://i1104.photobucket.com/albums/h329/zorq1/Spinning-asteroid-9.gif");
-	this.disengaged =false;
+	this.disengaged = false;
 	this.xoffset = -this.width/2;
 	this.yoffset = -this.height/2;
     this.x = x;
     this.y = y;
-    
     this.initi = false;
     this.lifeTime = 0; 
     this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
@@ -141,16 +142,12 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 };
 comet.prototype = new Sprite();
 
-//when player hits comet then move to middle/bottom of screen from wherever and then resume game
 comet.prototype.update = function(d){
 	if(!this.manager.pause){
 		if(gInput.x){
 			this.disengage();
 		}
-		
-		
-		
-		
+
 		if(!this.disengaged){
 			if(!this.onPlayer){
 				if(check2Ob(this,this.player)){
@@ -171,15 +168,48 @@ comet.prototype.update = function(d){
 			}
 			
 			if(this.onPlayer){
-				this.mine();
+				if(this.home == false){
+				   this.moveTo();
+				}
+				if(this.home == true){
+		            this.mine();
+					this.x = this.player.x - 17;
+					this.y = this.player.y;
+					}
+				}
+				
+
 			}
 			this.lifeTime++;
-		}else{
+		}if(this.disengaged){
+			this.y += this.speedMult;
+	        if(checkPOBn(this)){
+		       world.removeChild(this);
+	        }  
 			this.explodePhase();
 		}
-	}
-};
+	};
 
+//finds the middle/bottom moves to and finds an angle towards it
+comet.prototype.rot = function(obj){
+	var xDist = (canvas.width/2)-obj.x;
+	var yDist = (canvas.height-100)-obj.y;
+	var angle = Math.atan2(yDist, xDist);
+	this.goHome = angle + DTR(180);
+	
+};
+//moves toward angle found toward middle/bottom
+comet.prototype.moveTo = function(){
+	var xVel = 3;
+	var yVel = 3;
+	this.rot(this);
+	this.x -= xVel * Math.cos(this.goHome);
+	this.y -= yVel * Math.sin(this.goHome);
+	if(((this.x + 1 >= canvas.width/2) || (this.x - 1 <= canvas.width/2)) && (this.y + 1 >= (canvas.height - 100))){
+		this.home = true;
+	}
+	
+};
 
 comet.prototype.move= function(){
 	this.x += 2*this.speedMult*Math.sin(DTR(this.angle));
@@ -291,6 +321,7 @@ comet.prototype.mine = function(){
  };
 
 comet.prototype.disengage = function(){
+	this.disengaged = true;
 	
 };
 
