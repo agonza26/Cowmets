@@ -11,7 +11,7 @@ function alienManager(player,auto){
 	this.player = player;
 	this.auto = auto;
 	this.maxSize = 10;
-	this.alienArr = new Array();
+	this.alienArr = new List();
 	world.addChild(this);
 	this.alienPoints = 0;
 }
@@ -19,7 +19,7 @@ function alienManager(player,auto){
 
 
 alienManager.prototype.update = function(d){
-	console.log("total Alien points " + this.alienPoints);
+	//console.log("total Alien points " + this.alienPoints);
 	if(this.auto){
 		this.autoGenerate();
 	}
@@ -45,18 +45,21 @@ alienManager.prototype.autoGenerate = function(){
 
 
 alienManager.prototype.createF = function(x,y,dist){
-	var tempMan = quadSingleton.getInstance();
+
 	var t = new follower(x,y, 2, 2, 20,45, 45, this.player,this,dist);
-	tempMan.list.push(t);
+	
+	gridSingleton.getInstance().list.push(t);
 	this.alienArr.push(t);
 };
 
 
 alienManager.prototype.createS = function(x,y,path,pathSpeed){
-	var tempMan = quadSingleton.getInstance();
+
 	var t =new spammer(x,y,1, 1, 20, 45, 45,path,pathSpeed,this,this.player);
-	tempMan.list.push(t);
+	
 	this.alienArr.push(t);
+	
+	gridSingleton.getInstance().list.push(t);
 };
 
 
@@ -162,9 +165,8 @@ follower.prototype.shoot = function(){
 
 
 follower.prototype.deleteThis = function(){
-	var tempMan = quadSingleton.getInstance();
-	//tempMan.list.splice(this.manager.alienArr.indexOf(this),1);
-	this.manager.alienArr.splice(this.manager.alienArr.indexOf(this),1);
+	
+	this.manager.alienArr.remove(this);
 	world.removeChild(this);
 };
 
@@ -255,16 +257,12 @@ spammer.prototype.update = function(d){
 
 
 spammer.prototype.deleteThis = function(){
-	this.manager.alienArr.splice(this.manager.alienArr.indexOf(this),1);
+	this.manager.alienArr.remove(this);
 	world.removeChild(this);
-	//have it add this.points to the manager's points
-	//this.manager.alienPoints += this.points ; 
-	//this.givePoints();
 };
 
 //assume typically values between 0-2 (includes decimals, ie, 0.5, 1.25, 1)
 spammer.prototype.givePoints = function(mult){
-	
 	this.manager.alienPoints += this.points*mult ; 
 };
 

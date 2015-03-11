@@ -10,7 +10,7 @@ function rockManager(player,auto){
 	this.auto = auto;
 	this.maxSize = 10;
 	this.pause = false;
-	this.rockArr = new Array();
+	this.rockArr = new List();
 	this.rockImg = new Array();
 	this.rockImg.push(Textures.load("http://www.colorhexa.com/c0c0c0.png")); //smallAsteroid
 	world.addChild(this);
@@ -21,7 +21,7 @@ function rockManager(player,auto){
 
 
 rockManager.prototype.update = function(d){
-	console.log("total Rock points " + this.rockPoints);
+	//console.log("total Rock points " + this.rockPoints);
 	if(!this.pause){
 		if(this.auto){
 			this.autoGenerate();
@@ -64,9 +64,10 @@ rockManager.prototype.switchAuto = function(){
 
 
 rockManager.prototype.generateSR = function(x,y, angle, healthMult, speedMult,stag){
-	var tempMan = quadSingleton.getInstance();
+	
 	var t =new smallRock(x,y, angle, healthMult, speedMult, 20,45, 45,this.player,stag,this);
-	tempMan.list.push(t);
+	
+	gridSingleton.getInstance().list.push(t);
 	this.rockArr.push(t);
 };
 
@@ -76,9 +77,10 @@ rockManager.prototype.generateSR = function(x,y, angle, healthMult, speedMult,st
 
 
 rockManager.prototype.generateBR = function(x,y, angle, healthMult, speedMult, stag){
-	var tempMan = quadSingleton.getInstance();
+	
 	var t =new bigRock(x,y, angle, healthMult, speedMult, 20,45, 45,this.player,stag,this);
-	tempMan.list.push(t);
+	
+	gridSingleton.getInstance().list.push(t);
 	this.rockArr.push(t);
 };
 
@@ -537,9 +539,7 @@ smallRock.prototype.move= function(){
 
 
 smallRock.prototype.deleteThis = function(){
-	var tempMan = quadSingleton.getInstance();
-	tempMan.list.splice(this.manager.rockArr.indexOf(this),1);
-	this.manager.rockArr.splice(this.manager.rockArr.indexOf(this),1);
+	this.manager.rockArr.remove(this);
 	world.removeChild(this);
 };
 
@@ -634,9 +634,7 @@ bigRock.prototype.explosion = function(){
 
 
 bigRock.prototype.deleteThis = function(){
-	var tempMan = quadSingleton.getInstance();
-	tempMan.list.splice(this.manager.rockArr.indexOf(this),1);
-	this.manager.rockArr.splice(this.manager.rockArr.indexOf(this),1);
+	this.manager.rockArr.remove(this);
 	world.removeChild(this);
 };
 

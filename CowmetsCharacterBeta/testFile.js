@@ -1,3 +1,81 @@
+var gridSingleton = (function () {
+ 
+  // Instance stores a reference to the Singleton
+  var instance;
+ 
+  function gridManager() {
+  	
+    // Singleton
+
+    return {
+      // Public methods and variables
+      capacity: 0, 
+      
+      list: new List(),
+      grid: new CollisionGrid(0, 0, canvas.width, canvas.height, 10, 10),
+      
+      
+      updateGrid: function(items){
+      	for(var i = 0; i<items.length;i++)
+		this.grid.insert(items.getAt(i));
+      },
+      
+      retrieve: function (item){
+      	return this.grid.search(item);
+      },
+      
+      clear: function(){
+      	this.grid.clear();
+		}
+    };
+    
+    
+
+ 
+  };
+ 
+ 
+ 
+ 
+ 
+ 
+  return {
+ 
+    // Get the Singleton instance if one exists
+    // or create one if it doesn't
+    getInstance: function () {
+ 
+      if ( !instance ) {
+        instance = gridManager();
+        //instance.init();
+        //world.addChild(instance);
+      }
+ 
+      return instance;
+    }
+ 
+  };
+ 
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var quadSingleton = (function () {
  
   // Instance stores a reference to the Singleton

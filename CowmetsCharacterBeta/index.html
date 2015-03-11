@@ -55,7 +55,7 @@
 		var tempS = new GameStorage();
 
 
-		var tempMan = quadSingleton.getInstance();
+		var tempMan = gridSingleton.getInstance();
 		var x = new Level(tempS);
         x.initialize();
       	
@@ -64,7 +64,7 @@
 			this.updateChildren(d);
 			tempMan.clear();
 			//not currently working for some reason?
-			tempMan.updateTree(x.aM.alienArr);
+			tempMan.updateGrid(x.aM.alienArr);
 			
 			
 			
@@ -85,9 +85,9 @@
 				
 				items = tempMan.retrieve(currentAmmo); //gets list from area item is in
 				len = items.length;
-				
+				console.log(len);
 				for(var j = 0; j < len; j++){
-					item = items[i];
+					item = items.getAt(i);
 					
 					if(item===undefined){
 						
@@ -95,6 +95,16 @@
 							console.log("double damn");
 						}else{
 							console.log("damn");
+						}
+						continue;
+					}
+					
+					if(item==null){
+						
+						if(currentAmmo === undefined){
+							console.log("double damn");
+						}else{
+							console.log("null");
 						}
 						continue;
 					}
