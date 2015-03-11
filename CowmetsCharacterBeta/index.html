@@ -18,6 +18,7 @@
    <script src="rockManager.js"></script>
    <script src="Level.js"></script>
    <script src="mothership.js"></script>
+   <script src="States.js"></script>
 </head>
 
 
@@ -51,24 +52,70 @@
     	background.height = canvas.height;
     	
  		background.image = Textures.load("http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png");
-		world.addChild(background);
+		//world.addChild(background);
 
-		var tempS = new GameStorage();
+		//var tempS = new GameStorage();
 
 
-		var tempMan = quadSingleton.getInstance();
-		var x = new Level(tempS);
-        x.initialize();
+		//var tempMan = quadSingleton.getInstance();
+		//var x = new Level(tempS);
+        //x.initialize();
       	
-      	
+      
+		
+		var time = 0;
+		
+		var state1 = new State();
+		var state2 = new State();
+		var state3 = new State();
+		
+		var state_manager = new StateManager();
+		state_manager.push(state1); // the tail will be the state that is being drawn
+		state_manager.push(state2);
+		state_manager.push(state3);
+		
+		state1.bgColor = "#00ff00";
+		state2.bgColor = "#ff00ff";
+		state3.bgColor = "#0000ff";
+		
+		//state3.alwaysDraw = true;
+		/*
+		state_manager.update(time);
+		
+		state1.update(time);
+		state2.update(time);
+		state3.update();
+		*/
+		world.update = function(d){
+			console.log(time);
+			time++;
+			if(time > 1000)
+			{
+				state_manager.remove(state1);
+				state1.drawBG = false;
+				state2.drawBG = true;
+				time++;
+			}
+			
+			if(time > 2000)
+			{
+				state_manager.remove(state2);
+				state2.drawBG = false;
+				state3.drawBG = true;
+				time++;
+			}
+		}
+		
+		
+		
+		
+		
+      	/*
       	world.update = function(d){
 			this.updateChildren(d);
 			tempMan.clear();
 			//not currently working for some reason?
-			tempMan.updateTree(x.aM.alienArr);
-			
-			
-			
+			tempMan.updateTree(x.aM.alienArr);			
 			
 			var items;
 			var currentAmmo;
@@ -136,9 +183,9 @@
 				}
 				
 			}
-			//*/
+		
 		};
-      	
+      	*/
       	
       	
       	
