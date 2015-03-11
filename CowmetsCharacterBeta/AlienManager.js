@@ -19,7 +19,7 @@ function alienManager(player,auto){
 
 
 alienManager.prototype.update = function(d){
-	console.log("total Alien points " + this.alienPoints);
+	
 	if(this.auto){
 		this.autoGenerate();
 	}
