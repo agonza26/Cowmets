@@ -60,7 +60,7 @@ mothership.prototype.update = function(d){
 
 
 
-mothership.prototype.update
+//mothership.prototype.update
 
 
 // just moves left and right
