@@ -141,7 +141,7 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 };
 comet.prototype = new Sprite();
 
-
+//when player hits comet then move to middle/bottom of screen from wherever and then resume game
 comet.prototype.update = function(d){
 	if(!this.manager.pause){
 		if(gInput.x){
