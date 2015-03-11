@@ -16,7 +16,8 @@ function check_b(sprite){
 
 
 
-function Button1(x,y){
+function Button1(x,y,key){
+	this.key = key;
 	this.hide = false;
 	this.displayingChildren = false;
 	this.clickedOn = false;
@@ -87,11 +88,13 @@ Button1.prototype.onMouseUp = function(){
 
 
 Button1.prototype.addChildren = function(num){
-	this.childX = canvas.width/(num+1);
 	
+	this.childX = canvas.width/(num+1);
+	this.childrens = new List();
 	for(var i =0; i<num;++i){
-		this.childrens.push(new Button2(this.childX+this.childX*(i), this.y-150));
+		this.childrens.push(new Button2(this.childX+this.childX*(i), this.y-150,this.key,i));
 	}
+	this.hideChildren();
 	
 };
 
@@ -104,6 +107,9 @@ Button1.prototype.displayChildren = function(){
 		this.childrens.getAt(i).display();
 	}
 };
+
+
+
 
 
 Button1.prototype.hideChildren = function(){
@@ -130,7 +136,13 @@ Button1.prototype.hideChildren = function(){
 
 
 
-function Button2(x,y){
+function Button2(x,y,key,index){
+	this.key = key;
+	if(index== null || isNaN(index)){
+		this.index = -1;
+	}else{
+		this.index = index;
+	}
 	this.hidden = false;
 	Sprite.call(this);
 	this.oX = x;
@@ -183,7 +195,19 @@ Button2.prototype.onMouseDown = function(){
 Button2.prototype.onMouseUp = function(){
 	if(this.clickedOn){
 		if(check_b(this)){
-			
+			this.doSomething();
 		}
 	}
 };
+
+
+Button2.prototype.doSomething = function(){
+	switch (this.index){
+		case 0:
+			break;
+		default:
+			console.log("some shit");
+			break;
+	}
+};
+

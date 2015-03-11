@@ -21,7 +21,6 @@ function rockManager(player,auto){
 
 
 rockManager.prototype.update = function(d){
-	console.log("total Rock points " + this.rockPoints);
 	if(!this.pause){
 		if(this.auto){
 			this.autoGenerate();

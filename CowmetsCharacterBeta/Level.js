@@ -13,6 +13,9 @@ function Level(gameStorage){
     this.textPoints.drawBG = true;
     this.textPoints.bgColor = "#ffff00";
     this.textPoints.fontSize = 16;
+    this.bu = new Button1(canvas.width/2,canvas.height/2,"weapons");
+    
+    this.bu.addChildren(5);
     
 	this.lifeTime = 0;
 	this.hoardTimer = 100;
