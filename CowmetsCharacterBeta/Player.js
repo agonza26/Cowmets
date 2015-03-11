@@ -18,7 +18,8 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
 
     this.weaponConfig = new wepPair(defaultWeapon,defaultLevel); //base upgradeable field of madcow
     this.speedMult = 1;
-
+    this.goHome = 0;
+    this.home = false;
  	this.image = Textures.load("http://www.colorhexa.com/ffffff.png");
  		this.image = Textures.load("http://net.archbold.k12.oh.us/ahs/web_class/Spring_14/Holsteins_Rufenacht/images/HomePic3.png");
 	this.comet = null;
@@ -85,8 +86,13 @@ MadCow.prototype.update = function(d){
 
 
 		if(this.comet!=null){
+		    
+			if(this.home == false){
+			this.moveComet();
+			}
 			if(gInput.x){
 				this.comet=null;
+			
 			}
 		}
 		
@@ -133,6 +139,24 @@ MadCow.prototype.shoot = function(){
 	}
 };
 
+MadCow.prototype.moveComet = function(){
+	var xVel = 2.9;
+	var yVel = 2.9;
+	this.rot(this);
+	this.x -= xVel * Math.cos(this.goHome);
+	this.y -= yVel * Math.sin(this.goHome);
+    if((this.y +5 >= (canvas.height-100))){
+		this.home = true;
+	}
+};
+
+MadCow.prototype.rot = function(player){
+	var xDist = (canvas.width/2)-this.x;
+	var yDist = (canvas.height-100)-this.y;
+	var angle = Math.atan2(yDist, xDist);
+	this.goHome = angle + DTR(180);
+	
+};
 
 MadCow.prototype.move = function(){
 	var speed =1*this.speedMult;
