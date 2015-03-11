@@ -41,6 +41,20 @@ StateManager.prototype.push = function(state){
 	}*/
 }
 
+
+StateManager.prototype.push_front = function(state){
+	this.states.remove(state);
+	this.states.push_front(state);
+	state.input.blur();
+	if(!state.initialized){
+		state.init();
+	}
+	/*for(var node = state.widgets.head; node != null; node = node.link){
+		//println(node.item);
+		this.widgetsToAdd.push(node.item);
+	}*/
+}
+
 /**
  * Removes the given state from the stack.
  * 

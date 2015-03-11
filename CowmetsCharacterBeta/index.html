@@ -30,7 +30,7 @@
 <body onload="initGame('canvas');">
    
    
-<canvas id="canvas" width="900" height="900" >
+<canvas id="canvas" width="900" height="900" style = "border: solid gold;">
 </canvas>
    
    
@@ -63,45 +63,59 @@
       
 		
 		var time = 0;
+		var Pcondition = false;
 		
 		var state1 = new State();
 		var state2 = new State();
 		var state3 = new State();
 		
+		var PauseBox = new TextBox();
+		PauseBox.x = 450;
+		PauseBox.y = 450;
+		PauseBox.offsetX = -PauseBox.width / 2;
+		PauseBox.offsetY = -PauseBox.height / 2;
+		PauseBox.fontSize = 40;
+		PauseBox.text = "Paused";
+		
+		//p
+		gInput.addBool(80, "Pause");
+		
 		var state_manager = new StateManager();
-		state_manager.push(state1); // the tail will be the state that is being drawn
-		state_manager.push(state2);
-		state_manager.push(state3);
+		state_manager.push(state3); 	// the tail will be the state that is being drawn
+		//state_manager.push(state2);
+		state_manager.push(state1);
 		
 		state1.bgColor = "#00ff00";
-		state2.bgColor = "#ff00ff";
+		//state2.bgColor = "#ff00ff";
 		state3.bgColor = "#0000ff";
 		
-		//state3.alwaysDraw = true;
-		/*
-		state_manager.update(time);
 		
-		state1.update(time);
-		state2.update(time);
-		state3.update();
-		*/
-		world.update = function(d){
-			console.log(time);
+		state1.drawBG = true;
+		//state2.drawBG = true;
+		state3.drawBG = true;
+		
+		state3.world.addChild(PauseBox);
+		
+		world.update = function(d)
+		{
+			if(gInput.Pause && time % 5 == 0)
+			{
+				Pcondition = !Pcondition;
+				console.log("Pcondition Switched.");
+				delay = false;
+			}
+			//console.log(time);
 			time++;
-			if(time > 1000)
+			
+			if(Pcondition)
 			{
 				state_manager.remove(state1);
-				state1.drawBG = false;
-				state2.drawBG = true;
-				time++;
+				state_manager.push_front(state1);
 			}
-			
-			if(time > 2000)
+			if(!Pcondition)
 			{
-				state_manager.remove(state2);
-				state2.drawBG = false;
-				state3.drawBG = true;
-				time++;
+				state_manager.remove(state3);
+				state_manager.push_front(state3);
 			}
 		}
 		
