@@ -19,6 +19,7 @@
    <script src="Level.js"></script>
    <script src="mothership.js"></script>
    <script src="States.js"></script>
+   <script src="YtestEnvironment.js"></script>
 </head>
 
 
@@ -61,62 +62,11 @@
         //x.initialize();
       	
       
-		
-		var time = 0;
-		var Pcondition = false;
-		
-		var state1 = new State();
-		var state2 = new State();
-		var state3 = new State();
-		
-		var PauseBox = new TextBox();
-		PauseBox.x = 450;
-		PauseBox.y = 450;
-		PauseBox.offsetX = -PauseBox.width / 2;
-		PauseBox.offsetY = -PauseBox.height / 2;
-		PauseBox.fontSize = 40;
-		PauseBox.text = "Paused";
-		
-		//p
-		gInput.addBool(80, "Pause");
-		
-		var state_manager = new StateManager();
-		state_manager.push(state3); 	// the tail will be the state that is being drawn
-		//state_manager.push(state2);
-		state_manager.push(state1);
-		
-		state1.bgColor = "#00ff00";
-		//state2.bgColor = "#ff00ff";
-		state3.bgColor = "#0000ff";
-		
-		
-		state1.drawBG = true;
-		//state2.drawBG = true;
-		state3.drawBG = true;
-		
-		state3.world.addChild(PauseBox);
+		//doThisPlease();
 		
 		world.update = function(d)
 		{
-			if(gInput.Pause && time % 5 == 0)
-			{
-				Pcondition = !Pcondition;
-				console.log("Pcondition Switched.");
-				delay = false;
-			}
-			//console.log(time);
-			time++;
-			
-			if(Pcondition)
-			{
-				state_manager.remove(state1);
-				state_manager.push_front(state1);
-			}
-			if(!Pcondition)
-			{
-				state_manager.remove(state3);
-				state_manager.push_front(state3);
-			}
+			//loopThisPlease();
 		}
 		
 		
@@ -198,8 +148,8 @@
 			}
 		
 		};
-      	*/
       	
+      	*/
       	
       	
       	

@@ -16,7 +16,8 @@ function check_b(sprite){
 
 
 
-function Button1(x,y){
+function Button1(x,y)
+{
 	this.hide = false;
 	this.displayingChildren = false;
 	this.clickedOn = false;
@@ -75,9 +76,6 @@ Button1.prototype.onMouseUp = function(){
 			this.displayChildren();
 		}
 	}
-	
-	
-
 };
 
 
