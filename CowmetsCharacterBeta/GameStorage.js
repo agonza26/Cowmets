@@ -27,8 +27,8 @@ function GameStorage(levels){
 
 	
 	
-    this.pWepT = "missile";
-    this.pWepL = 2;
+    this.pWepT = "ammo";
+    this.pWepL = 5;
     this.pWepB = false;
     this.pWepU = null;
     this.currLevel = 0;
@@ -38,6 +38,8 @@ function GameStorage(levels){
 	
 	//x
 	gInput.addBool(88,"x");
+	//y
+	gInput.addBool(89,"y");
 	//m
 	gInput.addBool(77, "m");
 	//space
@@ -58,6 +60,9 @@ function GameStorage(levels){
 	gInput.addBool(89, "q");
 	//e
 	gInput.addBool(69, "e");
+	
+	//e
+	gInput.addBool(70, "f");
 	
 	//left key
 	gInput.addBool(37, "left2");
@@ -232,7 +237,7 @@ var checkPOB = function(ob,willDelete){
 var keepInBounds = function(ob,isY,isUL){
 	if(isY){
 		if(isUL){
-			ob.y = 0-ob.height/2; //Place it at the top
+			ob.y = 0+ob.height/2; //Place it at the top
 		}else{	
 	    	ob.y = canvas.height-ob.height/2; //Place it at the bottom
 	   }
@@ -244,6 +249,27 @@ var keepInBounds = function(ob,isY,isUL){
 		}
 	}	
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -285,6 +311,22 @@ var fillIndex = function(arr){
 	return t;
 	
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

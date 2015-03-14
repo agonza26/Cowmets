@@ -22,43 +22,7 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 	
 	switch(type){
 		
-		case "ammo":
-			switch(level){
-				case 0:
-					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
-					break;
-					
-				case 1:
-					this.ammoArr.push(new mcAmmo(x+5,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x-5,y,0,false,this));
-					break;
-				case 2:
-					this.ammoArr.push(new mcAmmo(x+10,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x-10,y,0,false,this));
-					break;
-					
-					
-					
-					
-				case 3:
-					this.ammoArr.push(new mcAmmo(x-10,y,-15,false,this));
-					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x+10,y,+15,false,this));
-					break;
-				case 4:
-					this.ammoArr.push(new mcAmmo(x+15,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x+5,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x-5,y,0,false,this));
-					this.ammoArr.push(new mcAmmo(x-15,y,0,false,this));
-					break;
-				default:
-					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
-					break;
-				
-			}
 		
-			break;
 			
 			
 			
@@ -71,18 +35,37 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 					break;
 					
 				case 1:
-					this.ammoArr.push(new mcMissile(x+5,y,this));
-					this.ammoArr.push(new mcMissile(x-5,y,this));
+					this.ammoArr.push(new mcMissile(x+10,y,this));
+					this.ammoArr.push(new mcMissile(x-10,y,this));
 					break;
 				case 2:
+					this.ammoArr.push(new mcMissile(x+20,y,this));
+					this.ammoArr.push(new mcMissile(x,y,this));
+					this.ammoArr.push(new mcMissile(x-20,y,this));
+					break;
+					
+				case 3:
+					this.ammoArr.push(new mcMissile(x+30,y,this));
+					this.ammoArr.push(new mcMissile(x+15,y,this));
+					this.ammoArr.push(new mcMissile(x,y,this));
+					this.ammoArr.push(new mcMissile(x-15,y,this));
+					this.ammoArr.push(new mcMissile(x-30,y,this));
+					break;
+					
+					
+				case 4:
+				default:
+				 	this.ammoArr.push(new mcMissile(x+30,y,this));
+					this.ammoArr.push(new mcMissile(x+20,y,this));
 					this.ammoArr.push(new mcMissile(x+10,y,this));
 					this.ammoArr.push(new mcMissile(x,y,this));
 					this.ammoArr.push(new mcMissile(x-10,y,this));
+					this.ammoArr.push(new mcMissile(x-20,y,this));
+					this.ammoArr.push(new mcMissile(x-30,y,this));
+					
 					break;
 					
-				default:
-					this.ammoArr.push(new mcMissile(x,y,this));
-					break;
+				
 				
 			}
 			break;
@@ -99,10 +82,21 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 					this.ammoArr.push(new mcLaser(x-10,y,this));
 					this.ammoArr.push(new mcLaser(x,y,this));
 					this.ammoArr.push(new mcLaser(x+10,y,this));
-					
 					break;
+					
+				case 3:
 				default:
-					this.ammoArr.push(new mcLaser(x,y,this));
+					
+					this.ammoArr.push(new mcLaser(x+40,y,this));
+					this.ammoArr.push(new mcLaser(x+25,y,this));
+					this.ammoArr.push(new mcLaser(x+10,y,this));
+					
+					
+					
+					this.ammoArr.push(new mcLaser(x-40,y,this));
+					this.ammoArr.push(new mcLaser(x-25,y,this));
+					this.ammoArr.push(new mcLaser(x-10,y,this));
+				
 					break;
 			}
 			break;
@@ -134,9 +128,61 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 					break;
 			}
 			break;
-		default:
-			this.ammoArr.push(new mcAmmo(x,y,0,false,this));
+		
+		case "ammo":
+			switch(level){
+				case 0:
+					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
+					break;
+					
+				case 1:
+					this.ammoArr.push(new mcAmmo(x+10,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-10,y,0,false,this));
+					break;
+				case 2:
+					this.ammoArr.push(new mcAmmo(x+15,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-15,y,0,false,this));
+					break;
+					
+					
+					
+					
+				case 3:
+					this.ammoArr.push(new mcAmmo(x-10,y,-15,false,this));
+					this.ammoArr.push(new mcAmmo(x,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x+10,y,+15,false,this));
+					break;
+				case 4:
+					this.ammoArr.push(new mcAmmo(x+25,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x+10,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-10,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-25,y,0,false,this));
+					break;
+				case 5:
+				default:
+					this.ammoArr.push(new mcAmmo(x+30,y,15,false,this));
+					this.ammoArr.push(new mcAmmo(x+15,y,10,false,this));
+					this.ammoArr.push(new mcAmmo(x+5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-15,y,-10,false,this));
+					this.ammoArr.push(new mcAmmo(x-30,y,-15,false,this));
+					break;
+					
+			
+				
+			}
+		
 			break;
+		default:
+					this.ammoArr.push(new mcAmmo(x+30,y,15,false,this));
+					this.ammoArr.push(new mcAmmo(x+15,y,10,false,this));
+					this.ammoArr.push(new mcAmmo(x+5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-15,y,-10,false,this));
+					this.ammoArr.push(new mcAmmo(x-30,y,-15,false,this));
+					break;
+			
 	}
 
 };
@@ -262,7 +308,7 @@ mcGrenade.prototype = new Sprite();
 
 
 mcGrenade.prototype.update = function(d){
-	if(!this.isColliding){
+	
 		//console.log(Math.sin(DTR(this.defaultAngle)));
 		this.x += 2*Math.sin(DTR(this.defaultAngle));
 		this.y -= 4*Math.cos(DTR(this.defaultAngle));
@@ -271,10 +317,10 @@ mcGrenade.prototype.update = function(d){
 		if(this.lifeTime > this.fuse){
 			world.removeChild(this);
 			console.log("grenade died");
-			var temp0 = new  mcAmmo(this.x,this.y,0+this.mdA,false);
-			var temp1 = new  mcAmmo(this.x,this.y,90+this.mdA,true);
-			var temp2 = new  mcAmmo(this.x,this.y,180+this.mdA,false);
-			var temp2 = new  mcAmmo(this.x,this.y,270+this.mdA,true);
+			this.manager.ammoArr.push(new  mcAmmo(this.x,this.y,0+this.mdA,false,this.manager));
+			this.manager.ammoArr.push(new  mcAmmo(this.x,this.y,90+this.mdA,true,this.manager));
+			this.manager.ammoArr.push(new  mcAmmo(this.x,this.y,180+this.mdA,false,this.manager));
+			this.manager.ammoArr.push(new  mcAmmo(this.x,this.y,270+this.mdA,true,this.manager));
 			
 		}
 		
@@ -285,9 +331,7 @@ mcGrenade.prototype.update = function(d){
 		}
 		
 		checkPOB(this,true);
-	}else{
-		this.deleteThis();
-	}
+
 };
 
 mcGrenade.prototype.deleteThis = function(){
@@ -312,14 +356,14 @@ mcGrenade.prototype.deleteThis = function(){
 function mcLaser(x,y,manager){
 	this.isColliding=false;
 	this.manager = manager;
-	this.increment= Math.floor(y/5);
-	console.log(this.increment);
+	
+	
 	this.lifeTime = 0;
 	
 	Sprite.call(this);
 
     this.width = 3;
-    this.height = y/2;
+    this.height = 60;
     
 
     
@@ -391,7 +435,7 @@ mcMissile.prototype.update = function(d){
 	if(!this.isColliding){
 		
 		checkPOB(this,true);
-		if(this.lifetime >=70){
+		if(this.lifetime >=60){
 			this.vel = 8;
 		}
 		
@@ -412,4 +456,157 @@ mcMissile.prototype.deleteThis = function(){
 	this.manager.ammoArr.splice(this.manager.ammoArr.indexOf(this),1);
 	//this.manager.ammoArr.remove(this);
 	world.removeChild(this);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var damageCalc = function(object,weapon){
+	var objectIs = "default";
+	var weaponIs = "default";
+	
+	
+	if(object instanceof spammer){
+		objectIs = "spammer";
+	}else if(object instanceof follower){
+		objectIs = "follower";
+	}else if(object instanceof smallRock){
+		objectIs = "smallRock";
+	}else if(object instanceof bigRock){
+		objectIs = "bigRock";
+	}
+	
+	
+	
+	if(weapon instanceof mcAmmo){
+		weaponIs = "mcAmmo";
+	}else if(weapon instanceof mcLaser){
+		weaponIs = "mcLaser";
+	}else if(weapon instanceof mcMissile){
+		weaponIs = "mcMissile";
+	}
+	
+	var damage = 1;
+	
+	switch (objectIs){
+		case "smallRock":
+			switch (weaponIs){
+				case "mcAmmo":
+					damage = 30;	
+					break;
+				case "mcMissile":
+					damage = 50;
+					break;
+				case "mcLaser":
+					damage = 25;
+					break;
+				default:
+					damage = 30;
+					break;	
+			}
+				
+			break;
+			
+			
+		case "bigRock":
+			switch (weaponIs){
+				case "mcAmmo":
+					damage = 30;
+					break;
+				case "mcMissile":
+					damage = 50;
+					break;
+				case "mcLaser":
+					damage = 30;
+					break;
+				default:
+					damage = 30;
+					break;	
+			}
+		
+		
+		
+		
+			break;
+		case "spammer":
+			switch (weaponIs){
+				case "mcAmmo":
+					damage = 40;
+					break;
+				case "mcMissile":
+					damage = 100;
+					break;
+				case "mcLaser":
+					damage = 100;
+					break;
+				default:
+					damage = 40;
+					break;	
+			}
+		
+		
+		
+			break;
+		case "follower":
+			switch (weaponIs){
+				case "mcAmmo":
+					damage = 50;
+					break;
+				case "mcMissile":
+					damage = 100;
+					break;
+				case "mcLaser":
+					damage = 80;
+					break;
+				default:
+					damage = 50;
+					break;	
+			}
+			break;
+		default:
+			switch (weaponIs){
+				case "mcAmmo":
+					damage = 5;
+					break;
+				case "mcMissile":
+					damage = 15;
+					break;
+				case "mcLaser":
+					damage = 10;
+					break;
+				default:
+					damage = 5;
+					break;	
+			}
+			break;	
+	}
+	
+	
+	
+	
+	return damage;
+	
+	
+	
+	
 };

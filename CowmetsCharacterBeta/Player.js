@@ -8,38 +8,73 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
     this.x = x;
     this.y = y;
 	
-	this.colIndex = calcIndexes(this);
 	
-	this.currUpgrades = upgrades;//will possibly be array with values representing upgrades or an object with boolean checks, once more upgrades are discussed this will be implemented
+	
+	
+	this.currUpgrades = new Array();
+	this.currUpgrades.push(0); //ammo
+	this.currUpgrades.push(0); //laser
+	this.currUpgrades.push(0); //missile
+	
+	this.minedResource = 0;
+	
+	
 	this.shootingSpeedUpgrade = 1;
 	this.speedMult = 1;
 	this.onComet = false;
 	this.burst = burst;
 
     this.weaponConfig = new wepPair(defaultWeapon,defaultLevel); //base upgradeable field of madcow
+    //override for current configuration of game
+    this.weaponConfig = new wepPair(defaultWeapon,0);
+    
+    
     this.speedMult = 1;
     this.goHome = 0;
     this.home = false;
  	this.image = Textures.load("http://www.colorhexa.com/ffffff.png");
- 		this.image = Textures.load("http://net.archbold.k12.oh.us/ahs/web_class/Spring_14/Holsteins_Rufenacht/images/HomePic3.png");
+ 	this.image = Textures.load("http://net.archbold.k12.oh.us/ahs/web_class/Spring_14/Holsteins_Rufenacht/images/HomePic3.png");
 	this.comet = null;
     
     this.lifeTime = 0;
     this.setROF();
     
     this.aMNGR = new AmmoMNGR(this,20,45,45);
-    this.h = new healthBar(100,0);
-    world.addChild(this);
+    
+        
     
     this.isColliding = false;
     this.shooting = false;
     this.shootTime = 0;
+    this.defaultHealth = 200;
+    this.h = new healthBar(200,0);
+    
+    this.justHitComet = false;
+    this.justHitHome = false;
+    
+    
+    
+    this.upgraded = false;
+    
+    
+    
+    this.hit = false;
+    this.hitTimer = 0;
+    this.hitmark;
+    
+    
+    
     this.truePause = false;
     this.pause = false;
+    this.permaPause = false;
 }
 MadCow.prototype = new Sprite();
 
-
+MadCow.prototype.init = function(){
+	world.addChild(this);
+	this.hitmark= new hitMark(this);
+    //this.hitmark.hide();
+};
 
 
 MadCow.prototype.pauseP = function(){
@@ -63,7 +98,7 @@ MadCow.prototype.setROF = function(){
 			this.shootRate= 30;
 			break;
 		case "laser":
-			this.shootRate = 120;
+			this.shootRate = 100;
 			break;
 		case "missile":
 			this.shootRate = 50;
@@ -77,44 +112,81 @@ MadCow.prototype.setROF = function(){
 	}
 };
 
+MadCow.prototype.hitting = function(){
+	if(this.hit){
+		this.hitTimer =0;
+		this.hit=false;
+		this.hitmark.unhide();
+	}
+	
+	if(this.hitTimer<=15){
+		this.hitTimer++;
+	}else{
+		this.hitmark.hide();
+	}
+	
+	
+};
 
 
 
 
-
-
+MadCow.prototype.checkUpgrade = function(){
+	if(this.upgraded){
+		
+	}
+	this.upgraded = false;
+};
 
 
 MadCow.prototype.update = function(d){
-	
-	this.isColliding = false;
-	this.setROF();
-	if(this.comet!=null){
-		    
-		if(this.home == false){
-			this.moveComet();
-			}
-	}
-	if(!this.pause){
-		var dontMove = false;
-		if(!this.home && this.comet!=null){
-			dontMove = true;
-		}	
-		if(!dontMove){	
-		   this.move();
-		   this.shoot();
-	    }
-
+	if(this.permaPause){
+		
+	}else{
+		this.isColliding = false;
+		
+		this.setROF();
+		
 		if(this.comet!=null){
-			if(gInput.x){
-				this.comet=null;
-			
-			}
+			    
+			if(this.home == false){
+				this.moveComet();
+				}
 		}
 		
-		//checkPOB(this,false);
-		//var a =calcIndexes(this);
-		this.lifeTime++;
+		
+		
+		
+		if(!this.pause){
+			this.hitting();
+			this.hitmark.updateM();
+			this.checkUpgrade();
+			var dontMove = false;
+			
+			
+			
+			if(!this.home && this.comet!=null){
+				dontMove = true;
+			}else{
+				dontMove = false;
+			}	
+			
+			if(!dontMove){	
+			   this.move();
+			   this.shoot();
+		    }
+		
+			if(this.comet!=null){
+				if(gInput.x){
+					this.comet=null;
+				
+				}
+			}
+			//console.log(this.h.health);
+			checkPOB(this,false);
+			//var a =calcIndexes(this);
+			this.lifeTime++;
+		}
 	}
 	
 	
@@ -134,13 +206,31 @@ MadCow.prototype.shoot = function(){
 	
 	
 	if(this.shooting){
+		var index = 0;
+		switch(this.weaponConfig.type){
+			
+			
+			case "laser":
+				index = 1;
+				break;
+			case "missile":
+				index = 0;
+				break;
+		
+			case "ammo":
+			default:
+				index = 0;
+
+				break;
+		
+		}
 		
 		
 		if(this.shootTime==0){
-			 this.aMNGR.getAmmo(this.weaponConfig.type ,this.weaponConfig.level,this.x,this.y-this.height/2);
+			 this.aMNGR.getAmmo(this.weaponConfig.type ,this.currUpgrades[index],this.x,this.y-this.height/2);
 		}
 		if((this.burst)&&(this.shootTime-5 ==0)){
-			 this.aMNGR.getAmmo(this.weaponConfig.type ,this.weaponConfig.level,this.x,this.y-this.height/2);
+			 this.aMNGR.getAmmo(this.weaponConfig.type ,this.currUpgrades[index],this.x,this.y-this.height/2);
 		}
 		
 		
@@ -154,6 +244,66 @@ MadCow.prototype.shoot = function(){
 		}
 	}
 };
+
+MadCow.prototype.switchWep = function(){
+	
+	switch(this.weaponConfig.type){
+		case "ammo":
+			this.weaponConfig.type = "laser";
+			this.weaponConfig.level=this.currUpgrades[1];
+
+			break;
+		case "laser":
+			this.weaponConfig.type = "missile";
+			this.weaponConfig.level=this.currUpgrades[2];
+			break;
+		case "missile":
+		default:
+			this.weaponConfig.type = "ammo";
+			this.weaponConfig.level=this.currUpgrades[0];
+			break;
+	}
+	
+};
+
+
+
+MadCow.prototype.upgrade = function(){
+	switch(this.weaponConfig.type){
+		case "ammo":
+		
+		
+			
+			switch(this.currUpgrades[0]){
+				
+			}
+
+			break;
+			
+			
+		case "laser":
+			switch(this.currUpgrades[1]){
+				
+			}
+		
+		
+			this.weaponConfig.type = "missile";
+			this.weaponConfig.level=this.currUpgrades[2];
+			break;
+			
+			
+		case "missile":
+			switch(this.currUpgrades[2]){
+				
+			}
+		
+		
+			this.weaponConfig.type = "ammo";
+			this.weaponConfig.level=this.currUpgrades[0];
+			break;
+	}
+};
+
 
 MadCow.prototype.moveComet = function(){
 	var xVel = 2.9;
@@ -180,11 +330,11 @@ MadCow.prototype.move = function(){
 			
 	if(this.comet ==null){
 
-		if((gInput.down)&&(gInput.up)){}
-		else if(gInput.down){
-			this.y += 4.5-speed*1.25;
+		if(((gInput.down)&&(gInput.up))||((gInput.down2)&&(gInput.up2))){}
+		else if((gInput.down)||(gInput.down2)){
+			this.y += 4.5-speed;
 		}else 
-		if(gInput.up){
+		if((gInput.up)||(gInput.up2)){
 			this.y -= 3 +2*speed;
 		}
 		
@@ -192,31 +342,91 @@ MadCow.prototype.move = function(){
 	
 	
 	
-	if((gInput.left)  && (gInput.right)  ){}
-	else if(gInput.left){
+	if((gInput.left)  && (gInput.right)){}
+	else if((gInput.left)||(gInput.left2)){
 		this.x -= 4-speed;
 		if(this.comet !=null){
 			this.comet.x -= 4-speed;
 			//checkPOB(this.comet,false);
 		}
 	}
-	else if(gInput.right){
+	else if((gInput.right)||(gInput.right2)){
 		this.x += 4-speed;
 		if(this.comet !=null){
 			this.comet.x += 4-speed;
 			//checkPOB(this.comet,false);
 		}
-	}
-	
-	
-	
-	
-	
-	
-	
+	}	
 };
 
 
+
+
+
+
+function hitMark(player){
+
+	Sprite.call(this);
+    this.player = player;
+    this.width = 45;
+    this.height = 45;
+    
+    this.xoffset = -this.width/2;
+	this.yoffset = -this.height/2;
+	
+    this.x = player.x;
+    this.y = player.y;
+    
+    this.image = Textures.load("http://www.clker.com/cliparts/H/u/D/n/Y/2/red-ball-hi.png");
+    this.ogW = this.width;
+	this.ogH = this.height;
+    world.addChild(this);
+};
+
+
+
+
+
+
+
+/*
+
+function hitMark(player){
+	Sprite.call(this);
+	this.image = Textures.load("http://www.clker.com/cliparts/Y/r/9/l/h/Z/exclamation-point-in-blue-hi.png");
+	this.width = player.width/2;
+	this.width = 20;
+	this.height= this.width;
+	this.x = player.x;
+	this.y = player.y-player.width/2-20-this.height/2;
+	
+	this.ogW = this.width;
+	this.ogH = this.height;
+	world.addChild(this);
+	
+}
+*/
+hitMark.prototype = new Sprite();
+
+hitMark.prototype.updateM = function(){
+	world.removeChild(this);
+	world.addChild(this);
+	this.move();
+};
+
+hitMark.prototype.move = function(){
+	this.x = this.player.x-5;
+	this.y = this.player.y;
+};
+hitMark.prototype.hide = function(){
+	console.log("hide");
+	this.alpha = 0;
+};
+hitMark.prototype.unhide = function(){
+	
+	console.log("unhide");
+	this.alpha = 0.5;
+};
 
 
 
@@ -237,8 +447,8 @@ function healthBar(max,offset){
 	this.maxH = max;
 	this.health = max;
 
-	this.b = new healthBarBottom(max*2,offset);
-	this.t = new healthBarTop(max*2,offset);
+	//this.b = new healthBarBottom(max*2,offset);
+	//this.t = new healthBarTop(max*2,offset);
 	world.addChild(this);
 }
 
@@ -246,11 +456,13 @@ healthBar.prototype.update = function(d){
 	//because at the moment I couldn't find a proper way to control the order in which things are drawn (and avoiding looking through & modifying brine.js)
 	//i found that removing from the world and immediately readding sets the draw priority to being on top of previously added objects
 	//will implement this with other objects later
+	
+	/*
 	world.removeChild(this.b);
 	world.removeChild(this.t);
 	world.addChild(this.b);
 	world.addChild(this.t);
-	
+	*/
 };
 
 
@@ -301,20 +513,22 @@ healthBar.prototype.setH =  function(newHealth){
 			newHealth = 0;
 		}
 		this.health= newHealth;
-
-		this.t.setH(newHealth);
+		//this.t.setH(newHealth);
 		//this.t.image = Textures.load(this.healthColor());	
 };
+
+
+
 
 
 healthBar.prototype.upgH = function(newHealth){
 	if(newHealth <0){
 		newHealth = 0;
 	}
-	this.b.width=newHealth;
-	this.b.xoffset = -this.b.width;
-	this.b.x=canvas.width;
-	this.setH(newHealth);
+	//this.b.width=newHealth;
+	//this.b.xoffset = -this.b.width;
+	//this.b.x=canvas.width;
+	//this.setH(newHealth);
 };
 
 	

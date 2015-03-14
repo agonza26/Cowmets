@@ -1,28 +1,109 @@
 function Level(gameStorage){
 	this.gs = gameStorage;	
-	this.p = new MadCow(canvas.width/2,    canvas.height/2,   this.gs.pWepU,  this.gs.pWepT,   this.gs.pWepL,this.gs.pWepB);
+	this.p = new MadCow(canvas.width/2,    5*canvas.height/6,   this.gs.pWepU,  this.gs.pWepT,   this.gs.pWepL,this.gs.pWepB);
 	this.aM = new alienManager(this.p,false);
     this.pM = new PowerUpManager(this.p);
     this.rM = new rockManager(this.p,false);
     this.bM = new bossManager(this.p);
+    
+    
+    
+    
     this.textPoints = new TextBox();
-    this.textPoints.x = 0;
+    this.textPoints.x = 10;
     this.textPoints.y = 10;
     this.textPoints.width = 100;
     this.textPoints.height = 30 ;
     this.textPoints.drawBG = true;
     this.textPoints.bgColor = "#ffff00";
     this.textPoints.fontSize = 16;
-    this.bu = new Button1(canvas.width/2,canvas.height/2,"weapons");
     
-    this.bu.addChildren(5);
+    
+    this.textResources = new TextBox();
+    this.textResources.x = 10;
+    this.textResources.y = 30;
+    this.textResources.width = 100;
+    this.textResources.height = 30 ;
+    this.textResources.drawBG = true;
+    this.textResources.bgColor = "#ffff00";
+    this.textResources.fontSize = 16;
+    
+    
+    
+    
+    
+    
+    this.textHealth = new TextBox();
+    this.textHealth.width = 100;
+    this.textHealth.height = 30 ;
+    this.textHealth.x = canvas.width-this.textHealth.width-10;
+    this.textHealth.y = 10;
+    this.textHealth.drawBG = true;
+    this.textHealth.bgColor = "#ff00ff";
+    this.textHealth.fontSize = 16;
+    
     
 	this.lifeTime = 0;
 	this.hoardTimer = 100;
 	
 	this.pauseWait = 10;
 	this.pressedPause = false;
+	
+	this.switchWait = 10;
+	this.pressedSwitch = false;
 	this.totalPoints = 0;
+	
+	
+	this.upgradeWait = 10;
+	this.pressedUpgrade = false;
+	this.totalPoints = 0;
+	
+	
+	
+	
+	
+	
+	this.b = new backgroundOb();
+	
+	
+	this.spArrL = new Array();
+	this.spArrR = new Array();
+	this.spArrM = new Array();
+	this.spArrS = new Array();
+	
+	this.spArrL.push([0,0,0,0,0, 90,90,0,0, 0,-90,-90]);
+	this.spArrR.push([0,0,0,0,0, -90,-90,0,0, 0,90,90]);
+	this.spArrS.push(10);
+	
+	
+	this.spArrL.push([0, 90, -90, 90, -90, 90, -90, 90, -90, 0]);
+	this.spArrR.push([0, -90, 90, -90, 90, -90, 90, -90, 90, 0]);
+	this.spArrS.push(15);
+
+
+	this.spArrL.push([0, 90, 0, 90, 90, 90, 0, 90, 0, 90, 90, 90]);
+	this.spArrR.push([0, -90, 0, -90, -90, -90, 0, -90, 0, -90, -90, -90]);
+	this.spArrS.push(15);
+	
+	this.spArrL.push([0, 0, 0, 0, 0, 0, 90, 0, 0, 90, 90, 0, 0, 0, 0]);
+	this.spArrR.push([0, 0, 0, 0, 0, 0, -90, 0, 0, -90, -90, 0, 0, 0, 0]);
+	this.spArrS.push(15);
+	
+	
+	this.spArrL.push([0, 0, 0, 0, 0, 0, 90, 90, 0, 0, 0, 0, -90, -90, 0, 0, 0, 0, 0, 0, 90, 90, 0, 0, -90, -90]);
+	this.spArrR.push([0, 0, 0, 0, 0, 0, -90, -90, 0, 0, 0, 0, 90, 90, 0, 0, 0, 0, 0, 0, -90, -90, 0, 0, 90, 90]);
+	this.spArrS.push(15);
+	
+	
+	
+	//random probability for enemy spawn rate
+	this.Ssr;
+	this.Fsr;
+	this.SAsr;
+	this.BAsr;
+	
+	this.hardPause=false;
+	this.gameOver = false;
 	
 }
 
@@ -30,6 +111,18 @@ function Level(gameStorage){
 Level.prototype.initialize = function(){
 	world.addChild(this);
 	world.addChild(this.textPoints);
+	world.addChild(this.textResources);
+	world.addChild(this.textHealth);
+	this.p.init();
+	
+	
+	
+	this.p.pauseP();
+	
+	this.b.pleaseUpdate = !this.b.pleaseUpdate;
+	this.aM.pause = !this.aM.pause;
+	this.rM.pause = !this.rM.pause;
+	
 };
 
 
@@ -38,103 +131,185 @@ Level.prototype.initialize = function(){
 
 
 Level.prototype.update = function(d){
+	if(this.p.h.health<=0){
+		this.aM.pause = true;
+		this.rM.pause = true;
+		this.hardPause = true;
+		this.b.pleaseUpdate = false;
+		this.gameOver = true;
+	}
+	
+	
+	if(this.p.justHitComet){
+			this.p.pauseP();
+			this.aM.pause = !this.aM.pause;
+			this.rM.pause = !this.rM.pause;
+			this.b.pleaseUpdate = !this.b.pleaseUpdate;
+			
+			if(this.p.justHitHome){this.p.justHitHome = false;
+			}else{
+				this.p.justHitComet = false;
+			}
+	}
+	
+	
+	
+	
+	if(gInput.y&&!this.gameOver){
+		this.p.pauseP();
+		this.aM.pause = !this.aM.pause;
+		this.rM.pause = !this.rM.pause;
+		this.hardPause = !this.hardPause;
+		this.b.pleaseUpdate = !this.b.pleaseUpdate;
+	}
+	
+	
+	
+	
 	
 
 	if(!this.pressedPause){
 		
-		if(gInput.m){
+		if(gInput.m && !this.hardPause){
 			this.p.pauseP();
 			this.aM.pause = !this.aM.pause;
 			this.rM.pause = !this.rM.pause;
 			this.pressedPause = true;
+			this.b.pleaseUpdate = !this.b.pleaseUpdate;
+		}else{
 			
+		}
+		
+	}
+	
+	
+	
+	
+	
+	if(!this.pressedSwitch){
+		
+		if(gInput.e && !this.p.pause){
+			this.p.switchWep();
 		}else{
 			
 		}
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	if(this.p.pause){
+	if(this.pressedSwitch){
+    	--this.switchWait;
+    	
+    	if(this.switchWait<=0){
+    		this.switchWait = 3;
+    		this.pressedSwitch = false;
+    		
+    	}
+    }
+    
+    
+    
+    if(!this.pressedUpgrade){
 		
+		if(gInput.f && !this.p.pause){
+			this.p.upgrade();
+		}else{
+			
+		}
 	}
+	
+	
+	if(this.pressedUpgrade){
+    	--this.upgradeWait;
+    	
+    	if(this.upgradeWait<=0){
+    		this.upgradeWait = 3;
+    		this.pressedUpgrade = false;
+    		
+    	}
+    }
+	
+	
+	
+	
+	
+
     if(this.pressedPause){
     	--this.pauseWait;
     	
     	if(this.pauseWait<=0){
-    		this.pauseWait = 50;
+    		this.pauseWait = 10;
     		this.pressedPause = false;
     		
     	}
     }
     
     
-    if(!this.p.pause){
+    if(!this.p.pause&&!this.gameOver){
+
     	
-    	if(this.lifeTime == 800){
+    	
+    	
+    	if(this.lifeTime % 800 ==0){
+    		console.log("createdPowerUp1");
     		this.pM.createPowerup1();
     	}
     	
     	
-    	if(this.lifeTime == 300){
+    	if(this.lifeTime % 300 ==0 ){
+    		console.log("createdPowerUp2");
     		this.pM.createPowerup2();
     	}
     	
     	
     	
-    	if(this.lifeTime == 1400){
+    	if(this.lifeTime % 1400 ==0){
+    		console.log("createdPowerUp3");
     		this.pM.createPowerup3();
     	}
     	
+    
     	
     	
-    	//proof of concept, at certain intervals, create an object, right now everything spawns really close in time for testing
-    	//bullet collision isnt fully implemented
+    	if(this.lifeTime %  100 ==0){
+    		this.rM.generateSR(Math.random()*canvas.width/2+canvas.width/4,0, Math.random()*40-20, 1, 1,false);
+    	}
+    	
+    	if(this.lifeTime %  200 ==0){
+    		//this.rM.generateBR(Math.random()*canvas.width/2+canvas.width/4,0, Math.random()*70-35, 1, 1,false);
+    	}
+    	
     	
     	
     	
     	
     	if(this.lifeTime %  500 ==0){
-    		this.aM.createS(0, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(50, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(100, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(150, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(200, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(250, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(300, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
+    		var index = Math.floor(Math.random()*this.spArrS.length-1);
+    		
+    		console.log(index);
+    		this.aM.createS(0, 0, this.spArrL[index], this.spArrS[index]);
+    		this.aM.createS(50, 0, this.spArrL[index], this.spArrS[index]);
+    		this.aM.createS(100, 0, this.spArrL[index], this.spArrS[index]);
+    		//this.aM.createS(150, 0, this.spArrL[index], this.spArrS[index]);
     		
     		
-    		this.aM.createS(0, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(50, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(100, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(150, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(200, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(250, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(300, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		
+    		this.aM.createS(canvas.width-50, 0, this.spArrR[index], this.spArrS[index]);
+    		this.aM.createS(canvas.width-100, 0, this.spArrR[index], this.spArrS[index]);
+    		this.aM.createS(canvas.width-150, 0, this.spArrR[index], this.spArrS[index]);
+    		//this.aM.createS(canvas.width-170, 0, this.spArrR[index], this.spArrS[index]);
+ 
+    	}
     	
-    	
-    		this.aM.createS(0, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(50, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(100, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(150, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(200, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(250, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(300, 350, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		
-    		
-    		//this.rM.generateSR(canvas.width/2-100,0, -10, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2, 0, 0, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2 + 100,0, 10, 1, 1,false);
-    		//this.rM.generateSR(100,100, 0, 1, 1,true);
+    	if(this.lifeTime % 1000==0){
+    		console.log("follower");
+    		this.aM.createF(canvas.width/2,-20,200);
     		
     	}
     	
+    	if(this.lifeTime % 800==0){
+    		
+    		this.aM.createF(canvas.width/2,-20,200);
+    		
+    	}
     	
     	
     	
@@ -143,108 +318,126 @@ Level.prototype.update = function(d){
     	}
     	
     	
+    	if(this.lifeTime %1500==0){
+    		this.rM.generateC(canvas.width+50,50, -60, 1, 1, 8,0.2,0.5,0.3);
+    	}
+    	
     	/*
-    	
-    	if(this.lifeTime == 1000){
-    		this.aM.createS(0, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(50, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(100, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(150, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(200, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(250, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(300, 0, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		
-    		
-    		this.aM.createS(0, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(50, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(100, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(150, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(200, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(250, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		this.aM.createS(300, 250, [0,0,0,0,0, 90,90,0,0, 0,-90,-90],10);
-    		
-    		
-    		
-    		
-    		
-    		//this.rM.generateSR(canvas.width/2-100,0, -10, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2, 0, 0, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2 + 100,0, 10, 1, 1,false);
-    		//this.rM.generateSR(100,100, 0, 1, 1,true);
-    		
-    	}
-    	
-    	
-    	if(this.lifeTime == 2000){
-    		this.aM.createS(0, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(50, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(100, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(150, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(200, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(250, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		this.aM.createS(300, 0, [90,0,0,0,0, -90,0,-90,0,0, 0,90],10);
-    		
-
-    		
-    		
-    		
-    		
-    		//this.rM.generateSR(canvas.width/2-100,0, -10, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2, 0, 0, 1, 1,false);
-    		//this.rM.generateSR(canvas.width/2 + 100,0, 10, 1, 1,false);
-    		//this.rM.generateSR(100,100, 0, 1, 1,true);
-    		
-    	}
-    	
-    	
-    	
-    	
-    	
-    	
     	this.rM.setMax(20);
-    	
     	
     	if(this.lifeTime==600){
     		console.log(this.rM.switchAuto());
     	}
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
+
     	if(this.lifeTime ==700){
     		console.log(this.rM.switchAuto());
     	}
-    	
-    	/*
-    	if(this.lifeTime == 1000){
-    		this.aM.createF(canvas.width/2,-20,200);
-    	}
-    	
-    	
-    	
-    	
-    	if(this.lifeTime == 500){
-    		this.aM.createS(100, 0, [0,0,90, 0, 0,90,90,90],10);
-    		this.aM.createS(150, 0, [0,0,90, 0, 0,90,90,90],10);
-    		this.aM.createS(200, 0, [0,0,90, 0 ,0,90,90,90],10);
-    	}
     	*/
-    	//this.aM.updateMap();
+    	
+    	
     	this.lifeTime++;
-    	this.totalPoints = this.aM.alienPoints + this.rM.rockPoints; 
-    	this.textPoints.text = this.totalPoints;
+    	
     	//console.log("Total overall points " + this.totalPoints);
     }else{
     	//draw pause menu
     }
+    this.totalPoints = this.aM.alienPoints + this.rM.rockPoints; 
+    	this.textPoints.text = "Points " +this.totalPoints;
+    	this.textResources.text = "Resources " + (Math.floor(this.totalPoints/10) + this.rM.resources);
+    	this.p.resources = (Math.floor(this.totalPoints/10) + this.rM.resources);
+    	this.textHealth.text = this.p.h.health/this.p.defaultHealth*100 +"%";
 };
+
+
+
+
 Level.prototype.beginComet = function(){};
 
 
 
+
+
+
+
+
+function backgroundOb(){
+			/*
+	this.background1 = new Sprite();
+	this.background1.x = 0;
+	this.background1.y = 0;
+	this.background1.width = canvas.width;
+	this.background1.height = canvas.height;
+	
+	this.background1.image = Textures.load("http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png");
+	world.addChild(this.background1);
+	
+	this.background2 = new Sprite();
+	this.background2.x = 0;
+	this.background2.y = -canvas.height;
+	this.background2.width = canvas.width;
+	this.background2.height = canvas.height;
+	
+	this.background2.image = Textures.load("http://www.motionbackgroundsforfree.com/wp-content/uploads/2012/04/Screen-shot-2012-04-13-at-2.24.50-PM.png");
+	world.addChild(this.background2);
+	
+	*/
+	world.addChild(this);
+	this.tiles = new Array();
+	for(var i = 0; -(320*4)+320*i<=320*4;i++){
+		for(var j = 0; j<2; j++){
+			this.tiles.push(new singleTile(this,320*j,-(320*4)+320*i));
+		}
+	}
+	
+	
+	
+	this.pleaseUpdate = true;
+}
+
+
+function singleTile(manager,x,y){
+	this.manager = manager;
+	Sprite.call(this);
+
+	this.x = x;
+	this.y = y;
+	this.width = 320;
+	this.height = 320;
+	
+	this.image = Textures.load("http://farm5.staticflickr.com/4143/4866427589_ae94e873c2_z.jpg");
+	world.addChild(this);
+	
+}
+
+singleTile.prototype = new Sprite();
+singleTile.prototype.update = function(d){
+	if(this.manager.pleaseUpdate){
+		this.y++;
+		if(this.y>=this.height*4){
+			this.y= -(320*4);
+		}
+		
+	}
+};
+
+
+var gameOver = function(){
+	
+}
+
+function gameOverS(manager,x,y){
+	this.manager = manager;
+	Sprite.call(this);
+
+	this.x = x;
+	this.y = y;
+	this.width = canvas.width;
+	this.height = canvas.height;
+	
+	this.image = Textures.load("http://farm5.staticflickr.com/4143/4866427589_ae94e873c2_z.jpg");
+	world.addChild(this);
+	
+}
 
 

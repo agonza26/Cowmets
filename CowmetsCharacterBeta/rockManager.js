@@ -15,15 +15,13 @@ function rockManager(player,auto){
 	this.rockImg.push(Textures.load("http://www.colorhexa.com/c0c0c0.png")); //smallAsteroid
 	world.addChild(this);
 	this.rockPoints = 0;
+	this.resources=0;
 }
 
 
 
 
 rockManager.prototype.update = function(d){
-
-	//console.log("total Rock points " + this.rockPoints);
-
 	if(!this.pause){
 		if(this.auto){
 			this.autoGenerate();
@@ -50,7 +48,6 @@ rockManager.prototype.autoGenerate = function(){
 	 } 
 };
 
-
 rockManager.prototype.setMax = function(num){
 	this.maxSize=num;
 };
@@ -62,13 +59,8 @@ rockManager.prototype.switchAuto = function(){
 };
 
 
-
-
-
 rockManager.prototype.generateSR = function(x,y, angle, healthMult, speedMult,stag){
-	
 	var t =new smallRock(x,y, angle, healthMult, speedMult, 20,45, 45,this.player,stag,this);
-	
 	gridSingleton.getInstance().list.push(t);
 	this.rockArr.push(t);
 };
@@ -79,9 +71,7 @@ rockManager.prototype.generateSR = function(x,y, angle, healthMult, speedMult,st
 
 
 rockManager.prototype.generateBR = function(x,y, angle, healthMult, speedMult, stag){
-	
 	var t =new bigRock(x,y, angle, healthMult, speedMult, 20,45, 45,this.player,stag,this);
-	
 	gridSingleton.getInstance().list.push(t);
 	this.rockArr.push(t);
 };
@@ -127,7 +117,10 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 	this.hO = new mineBar(mineRate,200,d,e,r);
 	this.goHome = 0;
 	this.home = false;
+	this.mineRate = mineRate;
 	
+	this.justHitPlayer = false;
+	this.justHitHome = false;
 	
 	Sprite.call(this);
     this.width = 60;  //we can make them bigger or smaller, the actual size will be debated once we work on art
@@ -141,7 +134,7 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
     this.y = y;
     this.initi = false;
     this.lifeTime = 0; 
-    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.health = 125*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
  	world.addChild(this);
 };
 comet.prototype = new Sprite();
@@ -160,6 +153,9 @@ comet.prototype.update = function(d){
 		}
 
 		if(!this.disengaged){
+			
+			
+			
 			if(!this.onPlayer){
 				if(check2Ob(this,this.player)){
 					this.onPlayer = true;
@@ -187,8 +183,6 @@ comet.prototype.update = function(d){
 					this.y = this.player.y;
 					}
 				}
-				
-
 			}
 			this.lifeTime++;
 		}if(this.disengaged){
@@ -196,7 +190,7 @@ comet.prototype.update = function(d){
 	        if(checkPOBn(this)){
 		       world.removeChild(this);
 	        }  
-			this.explodePhase();
+			
 		}
 	};
 
@@ -234,10 +228,6 @@ comet.prototype.move= function(){
 
 
 
-comet.prototype.explodePhase= function(){
-	console.log("does nothing right now");
-
-};
 
 
 comet.prototype.mine = function(){
@@ -257,19 +247,19 @@ comet.prototype.mine = function(){
 
 
 
-
-
+	
 
 	//if proper time to update bar
-	 if(this.lifeTime %  Math.floor(this.mineRate/fractOfRate)==0){
+	// if(  this.lifeTime %  Math.floor(this.mineRate*30/fractOfRate) ==0){
 	 	
 	 	
 	 	var decideForMe = Math.random()*100;
 	 	var currProgress = this.hO.progress/this.hO.max;
+	 	
 	 	var dP = 1-this.hO.D.width/this.hO.max;
 	 	var eP = 1-this.hO.E.width/this.hO.max;
 	 	var rP = 1-this.hO.R.width/this.hO.max;
-	 	
+	 	console.log("dP" + dP + "eP" + eP +"rP" +rP);
 	 	
 	 	
 	 	
@@ -277,18 +267,25 @@ comet.prototype.mine = function(){
 	 	
 	 	
 	 	if(currProgress<rP){
+	 		
 	 		caseP=0;
-	 	}else if(currProgress<rP){
+	 	}else if(currProgress<eP){
+	 		
 	 		caseP=1;
-	 	}else{
+	 	}else if(currProgress<.99){
+	 		
 	 		caseP=2;
+	 	}else{
+	 		//console.log("default explode");
+	 		this.explode();
+	 		return;
 	 	}
 	 	
-	 	
+	 
 	 	
 	 	switch(caseP){
 	 		case 0: //safe zone
-	 			if(decideForMe<50){
+	 			if(decideForMe<40){
 		 			this.giveResource();
 		 		}else{
 		 			//nothing
@@ -296,28 +293,26 @@ comet.prototype.mine = function(){
 	 			break;
 	 		
 	 		case 1: //bonus zone
-	 			if(decideForMe<90){
+	 			if(decideForMe<60){
 		 			this.giveResource();
-		 		}else if(decideForMe<25){
-		 			//console.log("explode");
+		 		}else if(decideForMe<65){
+		 			this.explode();
 		 		}else{
 		 			//nothing
 		 		}
 	 			break;
 	 		case 2://danger zone
-	 			if(decideForMe<20){
+	 			if(decideForMe<90){
 		 			this.giveResource();
-		 		}else if(decideForMe<25){
-		 			//console.log("explode");
-		 		}else{
-		 			//nothing
+		 		}else {
+		 			this.explode();
 		 		}
 	 			break;
 	 		case -1://bug somehow, but just in case
 	 		default:
 	 			break;	 		
 	 	}	 	
-	 } 
+	 //} 
 };
 
 
@@ -328,13 +323,50 @@ comet.prototype.mine = function(){
 
 
  comet.prototype.giveResource = function(){
-		console.log("no soup for you");
+
+		this.manager.resources+= 5;
  };
 
 comet.prototype.disengage = function(){
-	this.disengaged = true;
+	if(this.hO.progress>this.hO.r*200){
+		this.disengaged = true;
+		this.hO.deleteThis();
+		
+	}
+	
+	
+	
+	
 	
 };
+
+
+comet.prototype.explode = function(){
+	
+	this.onPlayer = false;
+	this.player.onComet = false;
+	this.player.comet = null;
+	this.player.home = false;
+	
+	
+	
+	console.log("explode");
+	this.player.h.setH(this.player.h.health-20);
+	this.disengaged = true;
+	this.hO.deleteThis();
+	var t =  new explosionObject(this.x,this.y);
+	
+};
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -362,6 +394,15 @@ function mineBar(mineRate,max,d,e,r){
 	this.C = new mineBarC(max);
 	
 }
+
+mineBar.prototype.deleteThis = function(){
+	world.removeChild(this);
+	world.removeChild(this.D);
+	world.removeChild(this.E);
+	world.removeChild(this.R);
+	world.removeChild(this.C);
+	
+};
 
 
 
@@ -490,7 +531,29 @@ mineBarC.prototype.init = function(){
 
 
 
+function explosionObject(x,y){
+	this.xoffset = -50;
+	this.yoffset =  -50;
+	Sprite.call(this);
+	this.x = x;
+	this.y = y;
+	this.width = 100;
+	this.height = 100;
+	this.image = Textures.load("http://th07.deviantart.net/fs71/PRE/i/2013/060/8/8/explosion_test_by_gamekiller48-d5wlzqk.png");
+	this.lifetime = 0;
+	world.addChild(this);
+	
+}
 
+explosionObject.prototype = new Sprite();
+
+
+
+explosionObject.prototype.update = function(d){
+	if(this.lifetime++>60){
+		world.removeChild(this);
+	}
+};
 
 
 
@@ -502,7 +565,8 @@ mineBarC.prototype.init = function(){
 
 function smallRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj,player, stag,manager){
 	this.manager=manager;
-	this.worm = null;
+	
+	
 	this.player = player;
 	this.stag = stag;
 	Sprite.call(this);
@@ -512,22 +576,40 @@ function smallRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCell
     
     this.isColliding = false;
 
- 	this.image = Textures.load("http://www.colorhexa.com/c0c0c0.png" );
+ 	this.image = Textures.load("http://images.clipartpanda.com/asteroid-clipart-PngMedium-moon-15892.png" );
 	this.angle =angle;
  	
 	this.xoffset = -this.width/2;
 	this.yoffset = -this.height/2;
     this.x = x;
     this.y = y;
-   
+    
+    this.worm;
+	
+	var t = Math.random()*100;
+	if (t < 0){   //0% chance to spawn, worm doesnt function correctly
+		this.worm = new worm(x,y, angle, healthMult, speedMult, 20, 45, 45, this.manager.player, this.manager, this);
+		this.worm.onRock = true;
+		
+	}else{
+		this.worm = null;
+	}
+    
+    
+    
+    
+   	this.points = 80;
     this.lifeTime; //used to show how long an object has been alive, and used so that after certain intervals activate something, 
     				//ie, if(this.lifetime % "interval of time"  == 0){ doSOmething} 
-    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.health = 125*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
  	world.addChild(this);
 };
 smallRock.prototype = new Sprite();
 
 
+smallRock.prototype.givePoints = function(mult){
+	this.manager.rockPoints += this.points*mult ; 
+};
 
 
 //for the moment, we will be using the smallRock's update function to show proof of concept,
@@ -537,15 +619,14 @@ smallRock.prototype = new Sprite();
 smallRock.prototype.update = function(d){
 	if(!this.manager.pause){
 		if(!this.isColliding){
-			if(!this.stag){
-				this.move();
-			}else{
-			
-			}
+			this.move();
 			this.lifeTime++;
 		}else{
+			if(this.worm!= null){
+				this.worm.onRock = false;
+			}
 			this.deleteThis();
-			console.log("dead just not dead");
+			
 		}
 	}
 };
@@ -558,18 +639,55 @@ smallRock.prototype.update = function(d){
 
 //let this function control how it should move, not if its going to be out of bounds
 smallRock.prototype.move= function(){
+	if(!this.stag){
+		this.x += 2*this.speedMult*Math.sin(DTR(this.angle));
+		this.y += 2*this.speedMult*Math.cos(DTR(this.angle));
+		
+		if(checkPOBn(this)){
+			this.deleteThis();
+			if(this.worm!= null){
+				this.worm.onRock = false;
+			}
+		}
+		
+		if(check2Ob(this,this.player)){
+			if(this.worm!= null){
+				this.worm.onRock = false;
+			}
+			this.deleteThis();
+			this.player.hit = true;
+			this.player.h. setH (this.player.h.health-10);
+		}  
+		
+		
 	
-	this.x += 2*this.speedMult*Math.sin(DTR(this.angle));
-	this.y += 2*this.speedMult*Math.cos(DTR(this.angle));
 	
-	if(checkPOBn(this)){
-		this.deleteThis();
+	
+	
+	}
+	for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
+		if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
+			this.health-=damageCalc(this,this.player.aMNGR.ammoArr[i]);
+			if(this.health<=0){
+				this.givePoints(1);
+				this.deleteThis();
+				if(this.worm!= null){
+					this.worm.onRock = false;
+				}
+				break;
+			}
+			
+			this.player.aMNGR.ammoArr[i].deleteThis();
+			
+			
+		}
 	}
 	
-	if(check2Ob(this,this.player)){
-		this.deleteThis();
-		this.player.h. setH (this.player.h.health-10);
-	}  
+	
+	
+	
+	
+	
 };
 
 
@@ -601,7 +719,7 @@ function bigRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj,
     this.width = 200;  //we can make them bigger or smaller, the actual size will be debated once we work on art
     this.height = 200;
     
-    
+    this.points = 200;
 
  	this.image = Textures.load("http://www.colorhexa.com/c0c0c0.png" );	
  	
@@ -617,11 +735,15 @@ function bigRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj,
 
     this.lifeTime = 0; //used to show how long an object has been alive, and used so that after certain intervals activate something, 
     				//ie, if(this.lifetime % "interval of time"  == 0){ doSOmething} 
-    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.health = 200*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
  	world.addChild(this);
 };
 bigRock.prototype = new Sprite();
 
+
+bigRock.prototype.givePoints = function(mult){
+	this.manager.rockPoints += this.points*mult ; 
+};
 
 bigRock.prototype.update = function(d){
 	if(!this.manager.pause){
@@ -653,10 +775,27 @@ bigRock.prototype.move= function(){
 		
 		if(check2Ob(this,this.player)){
 			this.deleteThis();
+			this.player.hit = true;
 			this.player.h.       setH      (this.player.h.health-15);
 		}
 
-	}   
+	} 
+	
+	for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
+		if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
+			this.health-=damageCalc(this,this.player.aMNGR.ammoArr[i]);
+			if(this.health<=0){
+				this.givePoints(1);
+				this.deleteThis();
+				break;
+			}
+			
+			this.player.aMNGR.ammoArr[i].deleteThis();
+			
+			
+		}
+	}
+	  
 };
 
 
@@ -687,15 +826,8 @@ bigRock.prototype.deleteThis = function(){
 
 
 
-
-
-
-/*
- * 
- * second version
- */
-//function worm(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj, player, manager, rock)
-function worm(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj, player, manager){
+function worm(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj, player, manager, rock){
+	this.target = null;
 	Sprite.call(this);
 	this.angle = angle;
 	this.manager = manager;
@@ -705,9 +837,9 @@ function worm(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj, pl
 
  	this.image = Textures.load("http://www.colorhexa.com/00ff00.png" ); //green
  	
-
+	this.points = 100;
     this.player = player;
-    
+    this.rock = rock;
  	this.onRock = true;
  	
  	this.cell_size = cellSize; //used later in grid checks, just leave here for now
@@ -732,10 +864,8 @@ worm.prototype = new Sprite();
 
 
 
-//-------------constantly rotating, and firing constantly.
-//add cases if in different quadrants to allow worm to rotate all the say around
+//constantly rotating, and firing at player.
 worm.prototype.rot = function(player){
-//worm.prototype.rot = function(){
 	var xDist = this.x-player.x;
 	var yDist = this.y-player.y;
 	var angle = Math.atan2(yDist, xDist);
@@ -749,22 +879,38 @@ worm.prototype.shoot = function(){
 	
 };
 
+worm.prototype.deleteThis = function(){
+	//this.manager.rockArr.remove(this);
+	world.removeChild(this);
+};
 
-//checks to see if it is on a rock
-//if yes rotate and shoots at the player
-//else it will fly towards another rock
+smallRock.prototype.givePoints = function(mult){
+	this.manager.rockPoints += this.points*mult ; 
+};
 
+
+
+/*checks to see if it is on a rock
+if yes rotate and shoots at the player
+if the rock gets destroyed then the worm follows
+the player and shoots at it
+*/
 worm.prototype.update = function(){
 	if(this.onRock == true){
+		
+		this.x = this.rock.x+this.rock.width/2;
+		this.y = this.rock.y+this.rock.height/2;
+		this.checkCol();
 		this.rot(this.player);
 		if(this.lifeTime % 50 == 0){
 			this.shoot();
 		}
 	}else{
 		this.moveTo(this.player); //change this to fly elsewhere
+		this.checkCol();
 		if(this.lifeTime % 150 == 0){
 			console.log("moving towards player");
-			
+			this.shoot();
 			//this.move(this.x + 20, this.y+20);
 		}
 	}
@@ -772,6 +918,38 @@ worm.prototype.update = function(){
 	this.lifeTime++;
 	
 	
+};
+
+
+
+worm.prototype.checkCol = function(){
+	if(checkPOBn(this)){
+			this.deleteThis();
+		
+		}
+		
+		if(check2Ob(this,this.player)){
+			this.deleteThis();
+			this.player.hit = true;
+			this.player.h.       setH      (this.player.h.health-15);
+		}
+
+	
+	
+	for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
+		if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
+			this.health-=damageCalc(this,this.player.aMNGR.ammoArr[i]);
+			if(this.health<=0){
+				this.givePoints(1);
+				this.deleteThis();
+				break;
+			}
+			
+			this.player.aMNGR.ammoArr[i].deleteThis();
+			
+			
+		}
+	}
 };
 
 //takes in an object(rock) allows it to move around
@@ -785,8 +963,8 @@ worm.prototype.move = function(x,y){
 worm.prototype.moveTo = function(obj){
 	this.rot(obj);
 	
-	this.x -= 2 * Math.cos(this.angle);
-	this.y -= 2* Math.sin(this.angle);
+	this.x -= 1.5 * Math.cos(this.angle);
+	this.y -= 1.5* Math.sin(this.angle);
 	
 };
 
@@ -844,114 +1022,4 @@ wAmmo.prototype.update = function(d){
 			world.removeChild(this);
 		}
 };
-//old version
-
-
-function worm(x,y, healthMult, speedMult, cellSize,numCelli, numCellj, player, manager,rock){
-	Sprite.call(this);
-	this.rock = rock;
 	
-	
-	this.manager = manager;
-	this.speedMult = speedMult; //assume values 1<=speedMult; used to make them harder/easier for levels
-    this.width = 30;  //we can make them bigger or smaller, the actual size will be debated once we work on art
-    this.height = 30;
-
- 	this.image = Textures.load("http://www.colorhexa.com/c0c0c0.png" );
- 	
-
-    this.player = player;
-    
-
- 	this.follow = false;
- 	this.followdist = dist;
- 	
- 	this.cell_size = cellSize; //used later in grid checks, just leave here for now
- 	this.maxI = numCelli;
-	this.maxJ = numCellj;
-
- 	
-	this.xoffset = -this.width/2;
-	this.yoffset = -this.height/2;
-    this.x = x;
-    this.y = y;
-    
-    this.lifeTime=0; //used to show how long an object has been alive, and used so that after certain intervals activate something, 
-    				//ie, if(this.lifetime % "interval of time"  == 0){ doSOmething} 
-    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
- 	world.addChild(this);
-	
-}
-
-
-worm.prototype.shoot = function(){
-	var oposite = this.x-this.player.x;
-	var adjacent = this.y-this.player.y;
-	
-	var hypotenuse = Math.sqrt(  yDist*yDist +  xDist*xDist );
-	
-	var angle = Math.asin(oposite/hypotenuse);
-	
-	this.angle+=angle;
-
-};
-
-
-
-
-
-
-
-function wAmmo(x,y,angle){
-	this.switchDir = false;
-	this.defaultAngle = angle;
-	this.colIndex= calcIndexes(this);
-	
-	Sprite.call(this);
-
-    this.width = 17.5/3;
-    this.height = 22.5/3;
-    
-    this.angle = angle;
-    
-    this.xoffset = -this.width/2;
-	this.yoffset = -this.height/2;
-    this.x = x;
-    this.y = y;
-    
-
-    this.image = Textures.load("http://www.colorhexa.com/00ffff.png");
-    
-    world.addChild(this);
-};
-
-
-
-
-
-wAmmo.prototype = new Sprite();
-
- 
-
-wAmmo.prototype.update = function(d){
-	
-		var xVel=2;
-		var yVel=8;
-		
-		if(this.switchDir){
-			xVel=8;
-			yVel=2;
-		}
-
-		this.x += xVel*Math.sin(DTR(this.defaultAngle));
-		this.y -= yVel*Math.cos(DTR(this.defaultAngle));
-		
-		
-		
-		
-		
-		//if(checkPOBn){
-		//	world.removeChild(this);
-		///}
-};
-	//*/

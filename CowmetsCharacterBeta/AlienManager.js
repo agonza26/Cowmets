@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-//test
+
 function alienManager(player,auto){
 	
 	this.pause = false;
@@ -19,9 +19,6 @@ function alienManager(player,auto){
 
 
 alienManager.prototype.update = function(d){
-
-	//console.log("total Alien points " + this.alienPoints);
-
 	if(this.auto){
 		this.autoGenerate();
 	}
@@ -85,7 +82,7 @@ function follower(x,y, healthMult, speedMult, cellSize,numCelli, numCellj, playe
 	this.speedMult = speedMult; //assume values 1<=speedMult; used to make them harder/easier for levels
     this.width = 30;  //we can make them bigger or smaller, the actual size will be debated once we work on art
     this.height = 30;
- 	this.image = Textures.load("http://www.colorhexa.com/2b00ff.png" );
+ 	this.image = Textures.load("https://38.media.tumblr.com/a12a3b9ea577c2b5b1e88fdc19429208/tumblr_mps2wtIgpe1rni86yo1_500.gif" );
     this.player = player;
  	this.follow = false;
  	this.followdist = dist;
@@ -99,7 +96,7 @@ function follower(x,y, healthMult, speedMult, cellSize,numCelli, numCellj, playe
     this.points = 200;
     this.lifeTime=0; //used to show how long an object has been alive, and used so that after certain intervals activate something, 
     				//ie, if(this.lifetime % "interval of time"  == 0){ doSOmething} 
-    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.health = 180*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
  	world.addChild(this);
 };
 
@@ -158,6 +155,27 @@ follower.prototype.move= function(){
 	}else{
 		this.y=this.player.y-this.player.height/2-this.followdist-this.jesusRoom-this.width/2;
 	}
+	
+	
+	
+	
+	for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
+		if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
+			this.health-=damageCalc(this,this.player.aMNGR.ammoArr[i]);
+			if(this.health<=0){
+					this.givePoints(1);
+					this.deleteThis();
+					break;
+			}
+			if(!(this.player.aMNGR.ammoArr[i] instanceof mcLaser )){
+				this.player.aMNGR.ammoArr[i].deleteThis();
+			}
+			
+		}
+	}
+
+	
+	
 };
 
 
@@ -175,7 +193,10 @@ follower.prototype.deleteThis = function(){
 
 
 
-
+//assume typically values between 0-2 (includes decimals, ie, 0.5, 1.25, 1)
+follower.prototype.givePoints = function(mult){
+	this.manager.alienPoints += this.points*mult ; 
+};
 
 
 
@@ -231,10 +252,9 @@ spammer.prototype = new Sprite();
 spammer.prototype.update = function(d){
 	
 	if(!this.manager.pause){
-		if(!this.isColliding){
+		if(!this.isColliding&&this.health>0){
 			this.move();
-			if(this.lifeTime%30 ==0){
-				//console.log("shooting");
+			if(this.lifeTime%40 ==0){
 				this.shoot();
 			}
 			
@@ -290,19 +310,27 @@ spammer.prototype.move = function(){
 		}
 		if(check2Ob(this,this.player)){
 			this.deleteThis();
-			this.givePoints(0.49);
+			this.givePoints(0.5);
+			this.player.hit = true;
 			this.player.h. setH (this.player.h.health-5);
 		}
 		
 		
+		
 		for(var i = 0; i< this.player.aMNGR.ammoArr.length;i++){
 			if(check2Ob(this,this.player.aMNGR.ammoArr[i])){
-				this.deleteThis();
-				this.givePoints(1);
+				this.health-=damageCalc(this,this.player.aMNGR.ammoArr[i]);
+				if(this.health<=0){
+					this.givePoints(1);
+					this.deleteThis();
+					break;
+				}
+				
 				if(!(this.player.aMNGR.ammoArr[i] instanceof mcLaser )){
+					
 					this.player.aMNGR.ammoArr[i].deleteThis();
 				}
-				break;
+				
 			}
 		}
 
@@ -356,7 +384,7 @@ fAmmo.prototype = new Sprite();
 fAmmo.prototype.update = function(d){
 	if(!this.player.pause){
 		if(check2Ob(this,this.player)){
-			
+			this.player.hit = true;
 			this.player.h.setH(this.player.h.health-1);
 			world.removeChild(this);
 		}
@@ -368,7 +396,7 @@ fAmmo.prototype.update = function(d){
 		this.y += 5; //moves downward at a certain speed 
 		
 		if(check2Ob(this,this.player)){
-			
+			this.player.hit = true;
 			this.player.h.setH(this.player.h.health-1);
 			world.removeChild(this);
 		}
@@ -414,7 +442,7 @@ spAmmo.prototype = new Sprite();
 spAmmo.prototype.update = function(d){
 	if(!this.player.pause){
 		if(check2Ob(this,this.player)){
-				
+				this.player.hit = true;
 				this.player.h.setH(this.player.h.health-1);
 				world.removeChild(this);
 			}
@@ -423,12 +451,12 @@ spAmmo.prototype.update = function(d){
 				world.removeChild(this);
 			}
 
-			this.y += 3; //moves downward at a certain speed 
+			this.y += 4; //moves downward at a certain speed 
 			
 			
 			
 			if(check2Ob(this,this.player)){
-				
+				this.player.hit = true;
 				this.player.h.setH(this.player.h.health-1);
 				world.removeChild(this);
 			}

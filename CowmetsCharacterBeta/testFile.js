@@ -1,3 +1,9 @@
+///failed attemps of collision detection, quad tree inspired from tree found on github, can look for source upon request, but modified for my use, and owner allowed edits/use
+//brine's collision grid also didnt want to play nicely, in both methods, some items in list showed up as undefined during collision, as shown by debug prints
+
+
+
+
 var gridSingleton = (function () {
  
   // Instance stores a reference to the Singleton

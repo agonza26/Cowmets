@@ -1,3 +1,8 @@
+//bosses to be implemented fully
+
+
+
+
 function bossManager(player){
 	this.player = player;
 	world.addChild(this);
