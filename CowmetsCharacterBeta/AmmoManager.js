@@ -83,8 +83,14 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 					this.ammoArr.push(new mcLaser(x,y,this));
 					this.ammoArr.push(new mcLaser(x+10,y,this));
 					break;
-					
 				case 3:
+				case 4:
+					this.ammoArr.push(new mcLaser(x-20,y,this));
+					this.ammoArr.push(new mcLaser(x+10,y,this));
+					this.ammoArr.push(new mcLaser(x-10,y,this));
+					this.ammoArr.push(new mcLaser(x+20,y,this));
+					break;
+				
 				default:
 					
 					this.ammoArr.push(new mcLaser(x+40,y,this));
@@ -160,6 +166,12 @@ AmmoMNGR.prototype.getAmmo = function(type,level,x,y){
 					this.ammoArr.push(new mcAmmo(x-25,y,0,false,this));
 					break;
 				case 5:
+					this.ammoArr.push(new mcAmmo(x+30,y,15,false,this));
+					this.ammoArr.push(new mcAmmo(x+15,y,10,false,this));
+					this.ammoArr.push(new mcAmmo(x+5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-5,y,0,false,this));
+					this.ammoArr.push(new mcAmmo(x-15,y,-10,false,this));
+					this.ammoArr.push(new mcAmmo(x-30,y,-15,false,this));
 				default:
 					this.ammoArr.push(new mcAmmo(x+30,y,15,false,this));
 					this.ammoArr.push(new mcAmmo(x+15,y,10,false,this));

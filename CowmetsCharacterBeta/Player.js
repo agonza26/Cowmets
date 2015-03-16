@@ -233,7 +233,7 @@ MadCow.prototype.shoot = function(){
 				index = 1;
 				break;
 			case "missile":
-				index = 0;
+				index = 2;
 				break;
 		
 			case "ammo":
