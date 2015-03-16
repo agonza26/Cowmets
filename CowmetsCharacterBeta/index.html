@@ -7,7 +7,7 @@
 <head>
    <title>Test Environment</title>
    <meta charset="utf-8">
-   <script src="brine.js"></script>
+   <script src="obrine.js"></script>
    <script src="Player.js"></script>
    <script src="testFile.js"></script>
    <script src="GameStorage.js"></script>
@@ -19,6 +19,7 @@
    <script src="Level.js"></script>
    <script src="mothership.js"></script>
    <script src="Button.js"></script>
+    
 </head>
 
 
@@ -42,15 +43,36 @@
    
         use2D = true;
         initGame("canvas");
-        
+        var tempb = false;
 
 		var tempS = new GameStorage();
 		var tempMan = gridSingleton.getInstance();
 		var x = new Level(tempS);
         x.initialize();
+        world.update = function(d){
+        	this.updateChildren(d);
+        	if(x.gameOver){
+        		if(tempb==false){
+        			while(this.children.length>0){
+        				this.children.pop();
+        			}
+        			
+        			this.addChild(new backgroundOb());
+        			tempb = true;
+        		}
+        	}
+        	
+        };
       	
       	
 
 
 	</script>
+	
+	<br>how to play:
+	<br><br>to start game press m, will be used to pause game 
+	<br>usage: wsad or arrow keys to move,
+	<br>space to shoot
+	<br>e to switch weapons
+	<br>f to upgrade weapon, currently unlimited, will use cost of resources eventually/n
 </body>

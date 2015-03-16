@@ -121,6 +121,8 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
 	
 	this.justHitPlayer = false;
 	this.justHitHome = false;
+	this.hitPoint = 0;
+	this.hitHome = 0;
 	
 	Sprite.call(this);
     this.width = 60;  //we can make them bigger or smaller, the actual size will be debated once we work on art
@@ -178,6 +180,10 @@ comet.prototype.update = function(d){
 			if(this.onPlayer){
 				
 				if(this.home == true){
+					if(this.lifeTime>this.hitHome){
+						this.justHitHome=false;
+					}
+
 		            this.mine();
 					this.x = this.player.x - 17;
 					this.y = this.player.y;
@@ -204,6 +210,11 @@ comet.prototype.rot = function(obj){
 };
 //moves toward angle found toward middle/bottom
 comet.prototype.moveTo = function(){
+	if(!this.justHitPlayer){
+		 this.player.tempPause=true;
+		this.justHitPlayer = true;
+		this.hitPoint = this.lifeTime;
+	}
 	var xVel = 3;
 	var yVel = 3;
 	this.rot(this);
@@ -211,6 +222,9 @@ comet.prototype.moveTo = function(){
 	this.y -= yVel * Math.sin(this.goHome);
 	if(((this.x + 1 >= canvas.width/2) || (this.x - 1 <= canvas.width/2)) && (this.y + 1 >= (canvas.height - 100))){
 		this.home = true;
+		this.player.tempPause=false;
+		this.hitHome = this.lifeTime;
+		this.justHitHome = true;
 		
 	}
 	
@@ -330,7 +344,9 @@ comet.prototype.mine = function(){
 comet.prototype.disengage = function(){
 	if(this.hO.progress>this.hO.r*200){
 		this.disengaged = true;
-		this.hO.deleteThis();
+		this.player.comet= null;
+		this.player.h.setH(this.player.h.health+2);
+		
 		
 	}
 	
@@ -351,7 +367,7 @@ comet.prototype.explode = function(){
 	
 	
 	console.log("explode");
-	this.player.h.setH(this.player.h.health-20);
+	this.player.h.setH(this.player.h.health-30);
 	this.disengaged = true;
 	this.hO.deleteThis();
 	var t =  new explosionObject(this.x,this.y);
@@ -587,7 +603,7 @@ function smallRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCell
     this.worm;
 	
 	var t = Math.random()*100;
-	if (t < 0){   //0% chance to spawn, worm doesnt function correctly
+	if (t < 20){   //0% chance to spawn, worm doesnt function correctly
 		this.worm = new worm(x,y, angle, healthMult, speedMult, 20, 45, 45, this.manager.player, this.manager, this);
 		this.worm.onRock = true;
 		

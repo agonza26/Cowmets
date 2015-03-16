@@ -570,16 +570,16 @@ var damageCalc = function(object,weapon){
 		case "follower":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 50;
-					break;
-				case "mcMissile":
-					damage = 100;
-					break;
-				case "mcLaser":
 					damage = 80;
 					break;
+				case "mcMissile":
+					damage = 170;
+					break;
+				case "mcLaser":
+					damage = 100;
+					break;
 				default:
-					damage = 50;
+					damage = 80;
 					break;	
 			}
 			break;

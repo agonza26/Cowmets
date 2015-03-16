@@ -29,10 +29,7 @@ function Level(gameStorage){
     this.textResources.fontSize = 16;
     
     
-    
-    
-    
-    
+
     this.textHealth = new TextBox();
     this.textHealth.width = 100;
     this.textHealth.height = 30 ;
@@ -46,15 +43,15 @@ function Level(gameStorage){
 	this.lifeTime = 0;
 	this.hoardTimer = 100;
 	
-	this.pauseWait = 10;
+	this.pauseWait = 20;
 	this.pressedPause = false;
 	
-	this.switchWait = 10;
+	this.switchWait = 20;
 	this.pressedSwitch = false;
-	this.totalPoints = 0;
+
 	
 	
-	this.upgradeWait = 10;
+	this.upgradeWait = 20;
 	this.pressedUpgrade = false;
 	this.totalPoints = 0;
 	
@@ -94,6 +91,17 @@ function Level(gameStorage){
 	this.spArrR.push([0, 0, 0, 0, 0, 0, -90, -90, 0, 0, 0, 0, 90, 90, 0, 0, 0, 0, 0, 0, -90, -90, 0, 0, 90, 90]);
 	this.spArrS.push(15);
 	
+	this.spArrL.push([0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,0,0,0,0,0,0,0]);
+	this.spArrR.push([0,0,0,0,0,0,0,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,0,0,0,0,0,0,0]);
+	this.spArrS.push(1);
+	
+	this.initPattern = new Array();
+	for(var i=0; i< 6;i++){
+		this.initPattern.push(Math.floor(Math.random()*5));
+	}
+	this.initPatternIndex = 0;
+	
+	
 	
 	
 	//random probability for enemy spawn rate
@@ -132,6 +140,7 @@ Level.prototype.initialize = function(){
 
 Level.prototype.update = function(d){
 	if(this.p.h.health<=0){
+		this.p.pauseP();
 		this.aM.pause = true;
 		this.rM.pause = true;
 		this.hardPause = true;
@@ -181,17 +190,47 @@ Level.prototype.update = function(d){
 		}
 		
 	}
+	///*
+	
+	 
+    if(this.p.comet!=null){
+		
+		
+		if(this.p.comet.justHitPlayer){
+			
+			
+			this.aM.pause = true;
+			this.rM.pause = true;
+			this.p.comet.justHitPlayer=false;
+			this.b.pleaseUpdate = false;
+		
+		}
+		if(this.p.comet.justHitHome){
+		
+			this.aM.pause = false;
+			this.rM.pause = false;
+			this.p.comet.justHitHome=false;
+			this.b.pleaseUpdate = true;
+		
+		}
+		
+		
+		
+	}
 	
 	
 	
 	
+	//*/
 	
 	if(!this.pressedSwitch){
 		
 		if(gInput.e && !this.p.pause){
+			console.log("calling swiwtchWep at" + this.lifeTime);
 			this.p.switchWep();
+			this.pressedSwitch=true;
 		}else{
-			
+			//console.log("not calling");
 		}
 	}
 	
@@ -200,7 +239,7 @@ Level.prototype.update = function(d){
     	--this.switchWait;
     	
     	if(this.switchWait<=0){
-    		this.switchWait = 3;
+    		this.switchWait = 20;
     		this.pressedSwitch = false;
     		
     	}
@@ -211,7 +250,9 @@ Level.prototype.update = function(d){
     if(!this.pressedUpgrade){
 		
 		if(gInput.f && !this.p.pause){
-			this.p.upgrade();
+			console.log("upgraded");
+			this.p.upgradeThis();
+			this.pressedUpgrade = true;
 		}else{
 			
 		}
@@ -222,11 +263,14 @@ Level.prototype.update = function(d){
     	--this.upgradeWait;
     	
     	if(this.upgradeWait<=0){
-    		this.upgradeWait = 3;
+    		this.upgradeWait = 20;
     		this.pressedUpgrade = false;
     		
     	}
     }
+	
+	
+	
 	
 	
 	
@@ -237,11 +281,13 @@ Level.prototype.update = function(d){
     	--this.pauseWait;
     	
     	if(this.pauseWait<=0){
-    		this.pauseWait = 10;
+    		this.pauseWait = 20;
     		this.pressedPause = false;
     		
     	}
     }
+   
+    
     
     
     if(!this.p.pause&&!this.gameOver){
@@ -251,20 +297,20 @@ Level.prototype.update = function(d){
     	
     	if(this.lifeTime % 800 ==0){
     		console.log("createdPowerUp1");
-    		this.pM.createPowerup1();
+    		//this.pM.createPowerup1();
     	}
     	
     	
     	if(this.lifeTime % 300 ==0 ){
     		console.log("createdPowerUp2");
-    		this.pM.createPowerup2();
+    		//this.pM.createPowerup2();
     	}
     	
     	
     	
     	if(this.lifeTime % 1400 ==0){
     		console.log("createdPowerUp3");
-    		this.pM.createPowerup3();
+    		//this.pM.createPowerup3();
     	}
     	
     
@@ -283,19 +329,31 @@ Level.prototype.update = function(d){
     	
     	
     	if(this.lifeTime %  500 ==0){
-    		var index = Math.floor(Math.random()*this.spArrS.length-1);
-    		
-    		console.log(index);
-    		this.aM.createS(0, 0, this.spArrL[index], this.spArrS[index]);
-    		this.aM.createS(50, 0, this.spArrL[index], this.spArrS[index]);
-    		this.aM.createS(100, 0, this.spArrL[index], this.spArrS[index]);
-    		//this.aM.createS(150, 0, this.spArrL[index], this.spArrS[index]);
     		
     		
-    		this.aM.createS(canvas.width-50, 0, this.spArrR[index], this.spArrS[index]);
-    		this.aM.createS(canvas.width-100, 0, this.spArrR[index], this.spArrS[index]);
-    		this.aM.createS(canvas.width-150, 0, this.spArrR[index], this.spArrS[index]);
-    		//this.aM.createS(canvas.width-170, 0, this.spArrR[index], this.spArrS[index]);
+    		
+    		
+    		this.aM.createS(0, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		this.aM.createS(60, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		this.aM.createS(120, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		//this.aM.createS(150, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		
+    		
+    		this.aM.createS(canvas.width-60, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		this.aM.createS(canvas.width-120, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		this.aM.createS(canvas.width-180, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		//this.aM.createS(canvas.width-170, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		
+    		if(++this.initPatternIndex>= this.initPattern.length){
+    			for(var i=0; i< 6;i++){
+					this.initPattern.pop();
+				}
+				for(var i=0; i< 6;i++){
+					this.initPattern.push(Math.floor(Math.random()*5));
+				}
+			
+				this.initPatternIndex = 0;
+    		}
  
     	}
     	
@@ -422,9 +480,6 @@ singleTile.prototype.update = function(d){
 };
 
 
-var gameOver = function(){
-	
-}
 
 function gameOverS(manager,x,y){
 	this.manager = manager;

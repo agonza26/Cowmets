@@ -13,7 +13,7 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
 	
 	this.currUpgrades = new Array();
 	this.currUpgrades.push(0); //ammo
-	this.currUpgrades.push(0); //laser
+	this.currUpgrades.push(2); //laser
 	this.currUpgrades.push(0); //missile
 	
 	this.minedResource = 0;
@@ -26,8 +26,8 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
 
     this.weaponConfig = new wepPair(defaultWeapon,defaultLevel); //base upgradeable field of madcow
     //override for current configuration of game
-    this.weaponConfig = new wepPair(defaultWeapon,0);
-    
+    this.weaponConfig = new wepPair("ammo",0);
+    this.weaponIndex = 0;
     
     this.speedMult = 1;
     this.goHome = 0;
@@ -41,7 +41,7 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
     
     this.aMNGR = new AmmoMNGR(this,20,45,45);
     
-        
+    this.tempPause = false;
     
     this.isColliding = false;
     this.shooting = false;
@@ -131,15 +131,17 @@ MadCow.prototype.hitting = function(){
 
 
 
-MadCow.prototype.checkUpgrade = function(){
-	if(this.upgraded){
-		
-	}
-	this.upgraded = false;
-};
+
 
 
 MadCow.prototype.update = function(d){
+	
+	
+	
+	
+	
+	
+	
 	if(this.permaPause){
 		
 	}else{
@@ -151,8 +153,24 @@ MadCow.prototype.update = function(d){
 			    
 			if(this.home == false){
 				this.moveComet();
-				}
+			}
 		}
+		
+		
+		
+		
+	
+    
+    
+    
+    
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -160,7 +178,7 @@ MadCow.prototype.update = function(d){
 		if(!this.pause){
 			this.hitting();
 			this.hitmark.updateM();
-			this.checkUpgrade();
+			
 			var dontMove = false;
 			
 			
@@ -176,12 +194,7 @@ MadCow.prototype.update = function(d){
 			   this.shoot();
 		    }
 		
-			if(this.comet!=null){
-				if(gInput.x){
-					this.comet=null;
-				
-				}
-			}
+			
 			//console.log(this.h.health);
 			checkPOB(this,false);
 			//var a =calcIndexes(this);
@@ -246,29 +259,36 @@ MadCow.prototype.shoot = function(){
 };
 
 MadCow.prototype.switchWep = function(){
-	
+	console.log("switchWep");
 	switch(this.weaponConfig.type){
 		case "ammo":
 			this.weaponConfig.type = "laser";
+			this.weaponIndex = 1;
 			this.weaponConfig.level=this.currUpgrades[1];
 
 			break;
 		case "laser":
 			this.weaponConfig.type = "missile";
+			this.weaponIndex = 2;
 			this.weaponConfig.level=this.currUpgrades[2];
 			break;
 		case "missile":
 		default:
 			this.weaponConfig.type = "ammo";
+			this.weaponIndex = 0;
 			this.weaponConfig.level=this.currUpgrades[0];
 			break;
 	}
 	
 };
 
+MadCow.prototype.upgradeThis = function(){
+	this.currUpgrades[this.weaponIndex]++;
+};
 
 
 MadCow.prototype.upgrade = function(){
+	console.log("upgrade");
 	switch(this.weaponConfig.type){
 		case "ammo":
 		
@@ -313,6 +333,8 @@ MadCow.prototype.moveComet = function(){
 	this.y -= yVel * Math.sin(this.goHome);
     if((this.y +5 >= (canvas.height-100))){
 		this.home = true;
+	}else{
+		this.home = false;
 	}
 };
 
@@ -329,7 +351,7 @@ MadCow.prototype.move = function(){
 		
 			
 	if(this.comet ==null){
-
+		this.home =false;
 		if(((gInput.down)&&(gInput.up))||((gInput.down2)&&(gInput.up2))){}
 		else if((gInput.down)||(gInput.down2)){
 			this.y += 4.5-speed;
@@ -376,7 +398,7 @@ function hitMark(player){
 	
     this.x = player.x;
     this.y = player.y;
-    
+    this.alpha = 0;
     this.image = Textures.load("http://www.clker.com/cliparts/H/u/D/n/Y/2/red-ball-hi.png");
     this.ogW = this.width;
 	this.ogH = this.height;
@@ -419,13 +441,13 @@ hitMark.prototype.move = function(){
 	this.y = this.player.y;
 };
 hitMark.prototype.hide = function(){
-	console.log("hide");
+	
 	this.alpha = 0;
 };
 hitMark.prototype.unhide = function(){
 	
-	console.log("unhide");
-	this.alpha = 0.5;
+	
+	
 };
 
 

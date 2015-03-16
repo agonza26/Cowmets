@@ -6,7 +6,7 @@
 
 
 function alienManager(player,auto){
-	
+	this.followNum=0;
 	this.pause = false;
 	this.player = player;
 	this.auto = auto;
@@ -44,11 +44,15 @@ alienManager.prototype.autoGenerate = function(){
 
 
 alienManager.prototype.createF = function(x,y,dist){
-
-	var t = new follower(x,y, 2, 2, 20,45, 45, this.player,this,dist);
-	
-	gridSingleton.getInstance().list.push(t);
-	this.alienArr.push(t);
+	if(this.followNum<3){
+		var t = new follower(x,y, 2, 2, 20,45, 45, this.player,this,dist);
+		this.followNum++;
+		gridSingleton.getInstance().list.push(t);
+		this.alienArr.push(t);
+		return true;
+	}else{
+		return false;
+	}
 };
 
 
@@ -80,8 +84,8 @@ function follower(x,y, healthMult, speedMult, cellSize,numCelli, numCellj, playe
 	this.manager = manager;
 	Sprite.call(this);
 	this.speedMult = speedMult; //assume values 1<=speedMult; used to make them harder/easier for levels
-    this.width = 30;  //we can make them bigger or smaller, the actual size will be debated once we work on art
-    this.height = 30;
+    this.width = 45;  //we can make them bigger or smaller, the actual size will be debated once we work on art
+    this.height = 35;
  	this.image = Textures.load("https://38.media.tumblr.com/a12a3b9ea577c2b5b1e88fdc19429208/tumblr_mps2wtIgpe1rni86yo1_500.gif" );
     this.player = player;
  	this.follow = false;
@@ -339,7 +343,7 @@ spammer.prototype.move = function(){
 
 spammer.prototype.shoot = function(){
 	//if(this.lifetime % 0 == 0){
-		var temp_ammo = new spAmmo(this.x + this.width / 2, this.y,this.player);
+		var temp_ammo = new spAmmo(this.x , this.y,this.player);
 	//}
 };
 
@@ -382,7 +386,8 @@ fAmmo.prototype = new Sprite();
 
 
 fAmmo.prototype.update = function(d){
-	if(!this.player.pause){
+	if((!this.player.pause)||(!this.player.tempPause)){
+		console.log("test");
 		if(check2Ob(this,this.player)){
 			this.player.hit = true;
 			this.player.h.setH(this.player.h.health-1);
@@ -392,9 +397,12 @@ fAmmo.prototype.update = function(d){
 			
 			world.removeChild(this);
 		}
-		
-		this.y += 5; //moves downward at a certain speed 
-		
+		if((this.player.pause==true)||(this.player.comet!=null&&!this.player.home)){
+				
+			}else{
+				this.y += 5; //moves downward at a certain speed 
+			}
+			
 		if(check2Ob(this,this.player)){
 			this.player.hit = true;
 			this.player.h.setH(this.player.h.health-1);
@@ -440,7 +448,8 @@ spAmmo.prototype = new Sprite();
 
 
 spAmmo.prototype.update = function(d){
-	if(!this.player.pause){
+	
+	if((!this.player.pause)||(!this.player.tempPause)){
 		if(check2Ob(this,this.player)){
 				this.player.hit = true;
 				this.player.h.setH(this.player.h.health-1);
@@ -450,9 +459,11 @@ spAmmo.prototype.update = function(d){
 				
 				world.removeChild(this);
 			}
-
-			this.y += 4; //moves downward at a certain speed 
-			
+			if((this.player.pause==true)||(this.player.comet!=null&&!this.player.home)){
+				
+			}else{
+				this.y += 4; //moves downward at a certain speed 
+			}
 			
 			
 			if(check2Ob(this,this.player)){
