@@ -512,7 +512,7 @@ var damageCalc = function(object,weapon){
 		case "smallRock":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 40;	
+					damage = 50;	
 					break;
 				case "mcMissile":
 					damage = 120;
@@ -521,7 +521,7 @@ var damageCalc = function(object,weapon){
 					damage = 25;
 					break;
 				default:
-					damage = 30;
+					damage = 50;
 					break;	
 			}
 				
@@ -551,7 +551,7 @@ var damageCalc = function(object,weapon){
 		case "spammer":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 50;
+					damage = 60;
 					break;
 				case "mcMissile":
 					damage = 100;
@@ -560,7 +560,7 @@ var damageCalc = function(object,weapon){
 					damage = 100;
 					break;
 				default:
-					damage = 40;
+					damage = 60;
 					break;	
 			}
 		

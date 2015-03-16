@@ -340,9 +340,15 @@ Level.prototype.update = function(d){
     	}
     	
     	
+    	if(this.lifeTime==200){
+    		console.log("here");
+    		//var t = new powerUp(this.p.x,0,"health", 3,4,"http://vignette2.wikia.nocookie.net/teamfortress/images/c/cc/Health_icon_TF2.png/revision/latest?cb=20130711173303",this.p);
+    	 
+    	}
     	
-    	
-    	
+    	 if(this.lifeTime%2000==0){
+    	 	//var t = new powerUp(Math.random()*(canvas.width-60),0 + 30,"health", 3,4,"http://vignette2.wikia.nocookie.net/teamfortress/images/c/cc/Health_icon_TF2.png/revision/latest?cb=20130711173303",this.p);
+    	 }
     	if(this.lifeTime %  500 ==0){
     		
     		
