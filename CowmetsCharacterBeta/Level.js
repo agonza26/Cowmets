@@ -481,18 +481,19 @@ singleTile.prototype.update = function(d){
 
 
 
-function gameOverS(manager,x,y){
-	this.manager = manager;
+function gameOverS(){
 	Sprite.call(this);
 
-	this.x = x;
-	this.y = y;
-	this.width = canvas.width;
-	this.height = canvas.height;
-	
-	this.image = Textures.load("http://farm5.staticflickr.com/4143/4866427589_ae94e873c2_z.jpg");
+	this.width = 400;
+	this.height = 185;
+	this.xoffset = -this.width/2;
+	this.yoffset = -this.height/2;
+	this.x=canvas.width/2;
+	this.y=canvas.height/2;
+	this.image = Textures.load("http://gameover.woese.com/upload/.logos/gameover.png");
 	world.addChild(this);
 	
 }
+gameOverS.prototype = new Sprite();
 
 
