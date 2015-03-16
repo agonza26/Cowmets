@@ -34,7 +34,34 @@
 <canvas id="canvas" width="640" height="800" >
 </canvas>
    
-   
+   <br>how to play:
+	<br><br>to start game press m, will be used to pause game 
+	<br>usage: wsad or arrow keys to move,
+	<br>space to shoot
+	<br>e to switch weapons
+	<br>f to upgrade weapon, currently unlimited, will use cost of resources eventually
+	
+	<br><br>initial upgrade cost per weapon, assume cost doubles after each upgrade
+	<br>ammo:200, overall decent weapon, quick shooting, ok damage
+	<br>laser:500 goes through non rock enemies and does major damage, but doesnt do well against rocks, worst shoot rate
+	<br>missile:350 best against rocks, but slow initial shooting
+	
+	
+	<br><br>enemies:
+	<br>spammer: move in programmed movement, generally weak
+	<br>follower:moves to hover above player, stronger than spammer
+	<br>asteroid: circle rock that floats through space, avoid collision, may contain worm
+	<br> enemy inside of worm, small chance of spawning, must destroy rock before you can damage worm
+	<br>      rotates to player location, once free goes towards player
+	
+	
+	
+	
+	<br><br>land on comets, semitransparent rock, to mine for resources, movement is limited to left and right, 
+	<br> press x to disengage from comet when bar is passed the green portion
+	<br> every next comet should give more resources, otherwise kill
+	<br> enemies to gain resources
+	
    
    <script>
    
@@ -70,10 +97,6 @@
 
 	</script>
 	
-	<br>how to play:
-	<br><br>to start game press m, will be used to pause game 
-	<br>usage: wsad or arrow keys to move,
-	<br>space to shoot
-	<br>e to switch weapons
-	<br>f to upgrade weapon, currently unlimited, will use cost of resources eventually/n
+	
+	
 </body>

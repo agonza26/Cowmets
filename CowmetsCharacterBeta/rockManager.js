@@ -16,6 +16,8 @@ function rockManager(player,auto){
 	world.addChild(this);
 	this.rockPoints = 0;
 	this.resources=0;
+	this.giveRL=1;
+	
 }
 
 
@@ -79,7 +81,12 @@ rockManager.prototype.generateBR = function(x,y, angle, healthMult, speedMult, s
 
 rockManager.prototype.generateC = function(x,y, angle, healthMult, speedMult, mineRate,d,e,r){
 	
-	var c = new comet(x,y, angle, healthMult, speedMult, this.player, this,mineRate,d,e,r);
+	var level = this.giveRL/2 - this.giveRL%2;
+	if(level<1){
+		level=1;
+	}
+	var c = new comet(x,y, angle, healthMult, speedMult, this.player, this,mineRate,d,e,r, level);
+	this.giveRL++;
 };
 
 
@@ -108,7 +115,8 @@ rockManager.prototype.generateC = function(x,y, angle, healthMult, speedMult, mi
 
 
 
-function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r){
+function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r,resourceLevel){
+	this.resourceLevel=resourceLevel;
 	this.manager=manager;
 	this.player = player;
 	this.onPlayer = false;
@@ -137,6 +145,7 @@ function comet(x,y, angle, healthMult, speedMult, player, manager,mineRate,d,e,r
     this.initi = false;
     this.lifeTime = 0; 
     this.health = 125*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.alpha = .5;
  	world.addChild(this);
 };
 comet.prototype = new Sprite();
@@ -309,14 +318,14 @@ comet.prototype.mine = function(){
 	 		case 1: //bonus zone
 	 			if(decideForMe<60){
 		 			this.giveResource();
-		 		}else if(decideForMe<65){
+		 		}else if(decideForMe<90){
 		 			this.explode();
 		 		}else{
 		 			//nothing
 		 		}
 	 			break;
 	 		case 2://danger zone
-	 			if(decideForMe<90){
+	 			if(decideForMe<40){
 		 			this.giveResource();
 		 		}else {
 		 			this.explode();
@@ -337,17 +346,19 @@ comet.prototype.mine = function(){
 
 
  comet.prototype.giveResource = function(){
+ 	
+ 	
 
-		this.manager.resources+= 5;
+		this.manager.resources+= this.resourceLevel;
  };
 
 comet.prototype.disengage = function(){
 	if(this.hO.progress>this.hO.r*200){
 		this.disengaged = true;
 		this.player.comet= null;
-		this.player.h.setH(this.player.h.health+2);
+		this.player.h.setH(this.player.h.health+10);
 		
-		
+		this.hO.deleteThis();
 	}
 	
 	
@@ -410,6 +421,8 @@ function mineBar(mineRate,max,d,e,r){
 	this.C = new mineBarC(max);
 	
 }
+
+
 
 mineBar.prototype.deleteThis = function(){
 	world.removeChild(this);
@@ -848,8 +861,8 @@ function worm(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCellj, pl
 	this.angle = angle;
 	this.manager = manager;
 	this.speedMult = speedMult; //assume values 1<=speedMult; used to make them harder/easier for levels
-    this.width = 30;  //we can make them bigger or smaller, the actual size will be debated once we work on art
-    this.height = 30;
+    this.width = 20;  //we can make them bigger or smaller, the actual size will be debated once we work on art
+    this.height = 20;
 
  	this.image = Textures.load("http://www.colorhexa.com/00ff00.png" ); //green
  	
@@ -900,7 +913,7 @@ worm.prototype.deleteThis = function(){
 	world.removeChild(this);
 };
 
-smallRock.prototype.givePoints = function(mult){
+worm.prototype.givePoints = function(mult){
 	this.manager.rockPoints += this.points*mult ; 
 };
 
@@ -914,8 +927,8 @@ the player and shoots at it
 worm.prototype.update = function(){
 	if(this.onRock == true){
 		
-		this.x = this.rock.x+this.rock.width/2;
-		this.y = this.rock.y+this.rock.height/2;
+		this.x = this.rock.x;
+		this.y = this.rock.y
 		this.checkCol();
 		this.rot(this.player);
 		if(this.lifeTime % 50 == 0){

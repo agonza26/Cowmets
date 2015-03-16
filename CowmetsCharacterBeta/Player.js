@@ -13,8 +13,14 @@ function MadCow(x,y,upgrades,defaultWeapon,defaultLevel,burst){
 	
 	this.currUpgrades = new Array();
 	this.currUpgrades.push(0); //ammo
-	this.currUpgrades.push(2); //laser
+	this.currUpgrades.push(0); //laser
 	this.currUpgrades.push(0); //missile
+	
+	
+	this.currUpgradesC = new Array();
+	this.currUpgradesC.push(200); //ammo
+	this.currUpgradesC.push(500); //laser
+	this.currUpgradesC.push(350); //missile
 	
 	this.minedResource = 0;
 	

@@ -251,8 +251,23 @@ Level.prototype.update = function(d){
 		
 		if(gInput.f && !this.p.pause){
 			console.log("upgraded");
-			this.p.upgradeThis();
-			this.pressedUpgrade = true;
+			
+			if(this.p.currUpgradesC[this.p.weaponIndex] <   (Math.floor(this.totalPoints/10) + this.rM.resources  )){
+				
+				this.rM.resources-=this.p.currUpgradesC[this.p.weaponIndex];
+					
+				this.p.currUpgradesC[this.p.weaponIndex]=this.p.currUpgradesC[this.p.weaponIndex]*2;
+				
+				
+				this.p.upgradeThis();
+				this.pressedUpgrade = true;
+			}
+	
+			
+			
+			
+			
+			
 		}else{
 			
 		}
@@ -295,13 +310,13 @@ Level.prototype.update = function(d){
     	
     	
     	
-    	if(this.lifeTime % 800 ==0){
+    	if(this.lifeTime % 1200 ==0){
     		console.log("createdPowerUp1");
     		//this.pM.createPowerup1();
     	}
     	
     	
-    	if(this.lifeTime % 300 ==0 ){
+    	if(this.lifeTime % 1300 ==0 ){
     		console.log("createdPowerUp2");
     		//this.pM.createPowerup2();
     	}

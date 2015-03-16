@@ -512,10 +512,10 @@ var damageCalc = function(object,weapon){
 		case "smallRock":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 30;	
+					damage = 40;	
 					break;
 				case "mcMissile":
-					damage = 50;
+					damage = 120;
 					break;
 				case "mcLaser":
 					damage = 25;
@@ -534,7 +534,7 @@ var damageCalc = function(object,weapon){
 					damage = 30;
 					break;
 				case "mcMissile":
-					damage = 50;
+					damage = 90;
 					break;
 				case "mcLaser":
 					damage = 30;
@@ -551,7 +551,7 @@ var damageCalc = function(object,weapon){
 		case "spammer":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 40;
+					damage = 50;
 					break;
 				case "mcMissile":
 					damage = 100;
@@ -570,13 +570,13 @@ var damageCalc = function(object,weapon){
 		case "follower":
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 80;
+					damage = 90;
 					break;
 				case "mcMissile":
-					damage = 170;
+					damage = 190;
 					break;
 				case "mcLaser":
-					damage = 100;
+					damage = 130;
 					break;
 				default:
 					damage = 80;
@@ -586,16 +586,16 @@ var damageCalc = function(object,weapon){
 		default:
 			switch (weaponIs){
 				case "mcAmmo":
-					damage = 5;
+					damage = 40;
 					break;
 				case "mcMissile":
-					damage = 15;
+					damage = 100;
 					break;
 				case "mcLaser":
-					damage = 10;
+					damage = 100;
 					break;
 				default:
-					damage = 5;
+					damage = 40;
 					break;	
 			}
 			break;	
