@@ -347,16 +347,19 @@ Level.prototype.update = function(d){
     		
     		
     		
-    		
-    		this.aM.createS(0, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
-    		this.aM.createS(60, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		if(this.lifeTime>10000){
+    			this.aM.createS(0, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    			this.aM.createS(60, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		}
     		this.aM.createS(120, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
     		//this.aM.createS(150, 0, this.spArrL[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
     		
     		
     		this.aM.createS(canvas.width-60, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
-    		this.aM.createS(canvas.width-120, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
-    		this.aM.createS(canvas.width-180, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		if(this.lifeTime>10000){
+    			this.aM.createS(canvas.width-120, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    			this.aM.createS(canvas.width-180, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
+    		}
     		//this.aM.createS(canvas.width-170, 0, this.spArrR[ this.initPattern[this.initPatternIndex]], this.spArrS[this.initPattern[this.initPatternIndex]]);
     		
     		if(++this.initPatternIndex>= this.initPattern.length){

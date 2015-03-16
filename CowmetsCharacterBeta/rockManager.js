@@ -630,7 +630,7 @@ function smallRock(x,y, angle, healthMult, speedMult, cellSize,numCelli, numCell
    	this.points = 80;
     this.lifeTime; //used to show how long an object has been alive, and used so that after certain intervals activate something, 
     				//ie, if(this.lifetime % "interval of time"  == 0){ doSOmething} 
-    this.health = 125*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
+    this.health = 100*healthMult; //assume values 0.1<=healthMult<=5; used to make them harder/easier for levels
  	world.addChild(this);
 };
 smallRock.prototype = new Sprite();
@@ -904,7 +904,7 @@ worm.prototype.rot = function(player){
 };
 
 worm.prototype.shoot = function(){
-	var tempWs = new wAmmo(this.x, this.y, this.angle);
+	var tempWs = new wAmmo(this.x, this.y, this.angle,this.player);
 	
 };
 
@@ -928,7 +928,7 @@ worm.prototype.update = function(){
 	if(this.onRock == true){
 		
 		this.x = this.rock.x;
-		this.y = this.rock.y
+		this.y = this.rock.y;
 		this.checkCol();
 		this.rot(this.player);
 		if(this.lifeTime % 50 == 0){
@@ -998,9 +998,9 @@ worm.prototype.moveTo = function(obj){
 };
 
 
-function wAmmo(x,y,angle){
+function wAmmo(x,y,angle,player){
 	
-
+this.player = player;
 	
 	
 	this.switchDir = false;
@@ -1027,10 +1027,22 @@ function wAmmo(x,y,angle){
 wAmmo.prototype = new Sprite();
 
  
-
 wAmmo.prototype.update = function(d){
 	
-		var xVel=4;
+	if((!this.player.pause)||(!this.player.tempPause)){
+		if(check2Ob(this,this.player)){
+				this.player.hit = true;
+				this.player.h.setH(this.player.h.health-1);
+				world.removeChild(this);
+			}
+			if(checkPOBn(this,this.player)){
+				
+				world.removeChild(this);
+			}
+			if((this.player.pause==true)||(this.player.comet!=null&&!this.player.home)){
+				
+			}else{
+							var xVel=4;
 		var yVel=4;
 		
 		
@@ -1042,13 +1054,17 @@ wAmmo.prototype.update = function(d){
 		//this.y += yVel * Math.sin(DTR(this.defaultAngle));
 		this.x += xVel * Math.cos(this.defaultAngle);
 		this.y += yVel * Math.sin(this.defaultAngle);
-		
-		
-		
-		
-		
-		if(checkPOBn(this)){
-			world.removeChild(this);
-		}
+			}
+			
+			
+			if(check2Ob(this,this.player)){
+				this.player.hit = true;
+				this.player.h.setH(this.player.h.health-1);
+				world.removeChild(this);
+			}
+			if(checkPOBn(this,this.player)){
+				
+				world.removeChild(this);
+			}
+	}
 };
-	
