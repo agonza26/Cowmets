@@ -356,7 +356,7 @@ comet.prototype.disengage = function(){
 	if(this.hO.progress>this.hO.r*200){
 		this.disengaged = true;
 		this.player.comet= null;
-		this.player.h.health+=10;
+		this.player.h.health+=2;
 		
 		this.hO.deleteThis();
 	}
